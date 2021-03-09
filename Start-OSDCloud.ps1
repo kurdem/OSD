@@ -3,7 +3,7 @@
 #===================================================================================================
 $GitHubRepo = 'https://github.com/OSDeploy/OSDCloud/blob/main'
 $GitHubScript = 'Start-OSDCloud.ps1'
-Write-Host "Starting $GitHubRepo/$GitHubScript" -Foregroundcolor Cyan
+Write-Host "$GitHubRepo/$GitHubScript" -Foregroundcolor Cyan
 Write-Host ""
 #===================================================================================================
 #   OSDCloud Options
@@ -58,11 +58,15 @@ if ($BuildImage -eq 'X') {
 $BuildName              = 'Default'
 $RequiresWinPE          = $true
 #===================================================================================================
-#   Enable High Performance Power Plan
+#   cURL
 #===================================================================================================
-Get-OSDPower -Property High
+if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) { 
+   Write-Host "cURL is required for this process to work"
+   pause
+   Break
+}
 #===================================================================================================
-#   Verify WinPE
+#   WinPE
 #===================================================================================================
 if ($RequiresWinPE) {
     if ((Get-OSDGather -Property IsWinPE) -eq $false) {
@@ -82,6 +86,10 @@ if (Get-USBDisk) {
     }
     while (Get-USBDisk)
 }
+#===================================================================================================
+#   Enable High Performance Power Plan
+#===================================================================================================
+Get-OSDPower -Property High
 #===================================================================================================
 #   Clear Local Disks
 #===================================================================================================
@@ -104,6 +112,13 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '2')) {
 #   Install OSDSUS
 #===================================================================================================
 if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '3')) {
+    Install-Module OSDSUS -Force
+    Import-Module OSDSUS -Force
+}
+#===================================================================================================
+#   Download Windows 10
+#===================================================================================================
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '4')) {
     Install-Module OSDSUS -Force
     Import-Module OSDSUS -Force
 }
