@@ -110,6 +110,11 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '2')) {
     New-OSDisk -Force
     Start-Sleep -Seconds 3
 }
+
+if (-NOT (Get-PSDrive -Name 'C')) {
+    Write-Warning "Disk does not seem to be ready.  Can't continue"
+    Break
+}
 #===================================================================================================
 #   Install OSDSUS
 #===================================================================================================
