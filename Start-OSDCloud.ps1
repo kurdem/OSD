@@ -20,10 +20,10 @@ Write-Host "    Clear-LocalDisk"
 Write-Host "   2" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    New-OSDisk"
 
-Write-Host "   3" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "   4" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Install-Module OSDSUS"
 
-Write-Host "   4" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "   5" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Download Windows 10 20H2 x64"
 
 Write-Host "   X" -ForegroundColor Green -BackgroundColor Black -NoNewline
@@ -40,6 +40,8 @@ until (
         ($BuildImage -eq '1') -or
         ($BuildImage -eq '2') -or
         ($BuildImage -eq '3') -or
+        ($BuildImage -eq '4') -or
+        ($BuildImage -eq '5') -or
         ($BuildImage -eq 'X')
     ) 
 )
@@ -111,16 +113,32 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '2')) {
 #===================================================================================================
 #   Install OSDSUS
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '3')) {
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '4')) {
     Install-Module OSDSUS -Force
     Import-Module OSDSUS -Force
 }
 #===================================================================================================
 #   Download Windows 10
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '4')) {
-    Install-Module OSDSUS -Force
-    Import-Module OSDSUS -Force
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '5')) {
+
+    if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
+        New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
+    }
+    
+    Write-Verbose "Finding Windows 10 downloads with OSDSUS" -Verbose
+    $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
+
+    if ($WindowsESD) {
+        $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
+        $Destination = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
+
+        Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
+        cmd /c curl -o "$Destination" $Source
+    } else {
+        Write-Warning "Could not find a Windows 10 download"
+        Break
+    }
 }
 
 
