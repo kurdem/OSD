@@ -12,19 +12,22 @@ Write-Host "FOR TESTING ONLY, NON-PRODUCTION"
 Write-Host -ForegroundColor DarkCyan "================================================================="
 
 Write-Host "AUTO" -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "Automated Everything"
+Write-Host "    Automated Everything"
 
-Write-Host "1   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "Clear-LocalDisk"
+Write-Host "   1" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Clear-LocalDisk"
 
-Write-Host "2   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "New-OSDisk"
+Write-Host "   2" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    New-OSDisk"
 
-Write-Host "3   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "Install-Module OSDSUS"
+Write-Host "   3" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Install-Module OSDSUS"
 
-Write-Host " X  " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "Exit"
+Write-Host "   4" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Download Windows 10 20H2 x64"
+
+Write-Host "   X" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Exit"
 
 Write-Host ""
 
