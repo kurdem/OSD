@@ -14,11 +14,14 @@ Write-Host -ForegroundColor DarkCyan "==========================================
 Write-Host "AUTO" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "Automated Everything"
 
-Write-Host "CLD " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "1   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "Clear-LocalDisk"
 
-Write-Host "NOSD" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "2   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "New-OSDisk"
+
+Write-Host "3   " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "Install-Module OSDSUS"
 
 Write-Host " X  " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "Exit"
@@ -31,8 +34,9 @@ do {
 until (
     (
         ($BuildImage -eq 'AUTO') -or
-        ($BuildImage -eq 'CLD') -or
-        ($BuildImage -eq 'NOSD') -or
+        ($BuildImage -eq '1') -or
+        ($BuildImage -eq '2') -or
+        ($BuildImage -eq '3') -or
         ($BuildImage -eq 'X')
     ) 
 )
@@ -44,9 +48,6 @@ if ($BuildImage -eq 'X') {
     Write-Host "Adios!" -ForegroundColor Cyan
     Write-Host ""
     Break
-}
-if ($BuildImage -ne 'X') {
-
 }
 #===================================================================================================
 #   Define Build Process
@@ -68,14 +69,6 @@ if ($RequiresWinPE) {
     }
 }
 #===================================================================================================
-#   Warning
-#===================================================================================================
-Write-Warning "This computer will be prepared for Windows Build"
-Write-Warning "All Local Hard Drives will be wiped and all data will be lost"
-Write-Host ""
-Write-Warning "When you press any key to continue, this process will get started"
-pause
-#===================================================================================================
 #   Remove USB Drives
 #===================================================================================================
 if (Get-USBDisk) {
@@ -87,35 +80,38 @@ if (Get-USBDisk) {
     while (Get-USBDisk)
 }
 #===================================================================================================
-#   Define Build Process
+#   Clear Local Disks
 #===================================================================================================
-if ($BuildImage -eq 'AUTO') {
-    $BuildName          = 'Automatic Everything'
-    #===================================================================================================
-    #   Clear Local Disks
-    #===================================================================================================
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '1')) {
+    Write-Warning "This computer will be prepared for Windows Build"
+    Write-Warning "All Local Hard Drives will be wiped and all data will be lost"
+    Write-Host ""
+    Write-Warning "When you press any key to continue, this process will get started"
+    pause
     Clear-LocalDisk -Force
-    #===================================================================================================
-    #   Create OSDisk
-    #===================================================================================================
+}
+#===================================================================================================
+#   Create OSDisk
+#===================================================================================================
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '2')) {
     New-OSDisk -Force
     Start-Sleep -Seconds 3
 }
-if ($BuildImage -eq 'CLD') {
-    $BuildName          = 'Clear-LocalDisk'
-    #===================================================================================================
-    #   Clear Local Disks
-    #===================================================================================================
-    Clear-LocalDisk -Force
+#===================================================================================================
+#   Install OSDSUS
+#===================================================================================================
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '3')) {
+    Install-Module OSDSUS -Force
+    Import-Module OSDSUS -Force
 }
-if ($BuildImage -eq 'NOSD') {
-    $BuildName          = 'New-OSDisk'
-    #===================================================================================================
-    #   Create OSDisk
-    #===================================================================================================
-    New-OSDisk -Force
-    Start-Sleep -Seconds 3
-}
+
+
+
+
+
+
+
+
 #===================================================================================================
 #   Apply OS
 #===================================================================================================
