@@ -11,14 +11,14 @@ Write-Host ""
 Write-Host "FOR TESTING ONLY, NON-PRODUCTION"
 Write-Host -ForegroundColor DarkCyan "================================================================="
 
-Write-Host " A  " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "Windows AutoPilot"
+Write-Host "AUTO" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "Automated Everything"
 
-Write-Host " AD " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "Windows AutoPilot Developer"
+Write-Host "CLD " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "Clear-LocalDisk"
 
-Write-Host " 64 " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "Windows 10 1909 x64"
+Write-Host "NOSD" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "New-OSDisk"
 
 Write-Host " X  " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "Exit"
@@ -30,9 +30,9 @@ do {
 }
 until (
     (
-        ($BuildImage -eq 'A') -or #AutoPilot
-        ($BuildImage -eq 'AD') -or #AutoPilot DEV Testing
-        ($BuildImage -eq '64') -or #Standard Image Testing
+        ($BuildImage -eq 'AUTO') -or
+        ($BuildImage -eq 'CLD') -or
+        ($BuildImage -eq 'NOSD') -or
         ($BuildImage -eq 'X')
     ) 
 )
@@ -53,26 +53,190 @@ if ($BuildImage -ne 'X') {
 #===================================================================================================
 $BuildName              = 'Default'
 $RequiresWinPE          = $true
-$RequiresUEFI           = $false
-$ApplyDrivers           = $true
-$ApplyAutoPilot         = $false
-$ApplyAutoPilotDEV      = $false
-$ApplyUnattend          = $true
+#===================================================================================================
+#   Enable High Performance Power Plan
+#===================================================================================================
+Get-OSDPower -Property High
+#===================================================================================================
+#   Verify WinPE
+#===================================================================================================
+if ($RequiresWinPE) {
+    if ((Get-OSDGather -Property IsWinPE) -eq $false) {
+        Write-Warning "$BuildName can only be run from WinPE"
+        pause
+        Break
+    }
+}
+#===================================================================================================
+#   Warning
+#===================================================================================================
+Write-Warning "This computer will be prepared for Windows Build"
+Write-Warning "All Local Hard Drives will be wiped and all data will be lost"
+Write-Host ""
+Write-Warning "When you press any key to continue, this process will get started"
+pause
+#===================================================================================================
+#   Remove USB Drives
+#===================================================================================================
+if (Get-USBDisk) {
+    do {
+        Write-Warning "Remove all attached USB Drives at this time ..."
+        $RemoveUSB = $true
+        pause
+    }
+    while (Get-USBDisk)
+}
+#===================================================================================================
+#   Define Build Process
+#===================================================================================================
+if ($BuildImage -eq 'AUTO') {
+    $BuildName          = 'Automatic Everything'
+    #===================================================================================================
+    #   Clear Local Disks
+    #===================================================================================================
+    Clear-LocalDisk -Force
+    #===================================================================================================
+    #   Create OSDisk
+    #===================================================================================================
+    New-OSDisk -Force
+    Start-Sleep -Seconds 3
+}
+if ($BuildImage -eq 'CLD') {
+    $BuildName          = 'Clear-LocalDisk'
+    #===================================================================================================
+    #   Clear Local Disks
+    #===================================================================================================
+    Clear-LocalDisk -Force
+}
+if ($BuildImage -eq 'NOSD') {
+    $BuildName          = 'New-OSDisk'
+    #===================================================================================================
+    #   Create OSDisk
+    #===================================================================================================
+    New-OSDisk -Force
+    Start-Sleep -Seconds 3
+}
+#===================================================================================================
+#   Apply OS
+#===================================================================================================
+<# try {Expand-WindowsImage -ImagePath $OperatingSystem -ApplyPath "C:\" -Index 1 -ErrorAction Ignore}
+catch {Write-Host "Writing Image"} #>
 
-if ($BuildImage -eq 'A') {
-    $BuildName          = 'AutoPilot for Existing Devices'
-    $RequiresUEFI       = $true
-    $ApplyAutoPilot     = $true
+#dism /apply-image /imagefile:"$OperatingSystem\OS\Sources\install.swm" /SWMFile:"$OperatingSystem\OS\Sources\install*.swm" /index:1 /applydir:c:\
+
+<# $SystemDrive = Get-Partition | Where-Object {$_.Type -eq 'System'} | Select-Object -First 1
+$SystemDrive | Set-Partition -NewDriveLetter 'S' #>
+#bcdboot C:\Windows /s S: /f ALL
+#$SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
+#===================================================================================================
+#   Create Directories
+#===================================================================================================
+<# $PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
+if (-NOT (Test-Path $PathAutoPilot)) {
+    Write-Warning "An error has occurred finding $PathAutoPilot"
+    Write-Warning "AutoPilot will exit"
+    Break
 }
-if ($BuildImage -eq 'AD') {
-    $BuildName          = 'AutoPilot DEV for Existing Devices'
-    $RequiresUEFI       = $true
-    $ApplyAutoPilotDEV  = $true
+$PathPanther = 'C:\Windows\Panther'
+if (-NOT (Test-Path $PathPanther)) {
+    New-Item -Path $PathPanther -ItemType Directory -Force | Out-Null
 }
-if ($BuildImage -eq '64') {
-    $BuildName          = 'Windows 10 1909 x64'
-}
-<# if ($BuildImage -eq 'WU') {
-    $BuildName          = 'Windows OS Unattend'
-    $ApplyUnattend      = $true
+
+$AutoPilotConfigurationFile = Join-Path $PathAutoPilot 'AutoPilotConfigurationFile.json'
+$UnattendPath = Join-Path $PathPanther 'Unattend.xml' #>
+#===================================================================================================
+#   Apply AutoPilot
+#===================================================================================================
+<# if ($AutoPilotProd -or $AutoPilotDev) {
+    Write-Verbose -Verbose "Setting $AutoPilotConfigurationFile"
+    if ($AutoPilotProd) {
+        $AutoPilotJsonProd | Out-File -FilePath $AutoPilotConfigurationFile -Encoding ASCII
+    }
+    if ($AutoPilotDev) {
+        $AutoPilotJsonDev | Out-File -FilePath $AutoPilotConfigurationFile -Encoding ASCII
+    }
 } #>
+#===================================================================================================
+#   Apply Drivers
+#===================================================================================================
+$UnattendDrivers = @'
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+	<settings pass="offlineServicing">
+		<component name="Microsoft-Windows-PnpCustomizationsNonWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<DriverPaths>
+				<PathAndCredentials wcm:keyValue="1" wcm:action="add">
+					<Path>C:\Drivers</Path>
+				</PathAndCredentials>
+			</DriverPaths>
+		</component>
+	</settings>
+</unattend>
+'@
+<# if ($ApplyDrivers) {
+    & $Drivers\Deploy-OSDDrivers.ps1
+    Write-Verbose -Verbose "Copying Drivers ... this may take a while ..."
+    
+    Write-Verbose -Verbose "Setting Driver Unattend.xml at $UnattendPath"
+    $UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
+
+    Write-Verbose -Verbose "Applying Unattend ... this may take a while ..."
+    Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
+} #>
+#===================================================================================================
+#   Apply ApplyUnattendAE
+#===================================================================================================
+$UnattendAuditModeAutoPilot = @'
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Reseal>
+                <Mode>Audit</Mode>
+            </Reseal>
+        </component>
+    </settings>
+    <settings pass="auditUser">
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>1</Order>
+                    <Description>Set ExecutionPolicy Bypass</Description>
+                    <Path>PowerShell -WindowStyle Hidden -Command "Set-ExecutionPolicy Bypass -Force"</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Configure AutoPilot</Description>
+                    <Path>PowerShell.exe -WindowStyle Minimized -File "C:\Program Files\WindowsPowerShell\Scripts\Upload-WindowsAutopilotDeviceInfo.ps1" -TenantName "bakerhughes.onmicrosoft.com" -GroupTag Enterprise</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>AutoPilot Sync Delay</Description>
+                    <Path>PowerShell.exe -WindowStyle Minimized -Command Write-Host "Please wait up to 10 minutes ...";Start-Sleep -Seconds 600</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <Description>Set ExecutionPolicy RemoteSigned</Description>
+                    <Path>PowerShell -WindowStyle Hidden -Command "Set-ExecutionPolicy RemoteSigned -Force"</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>5</Order>
+                    <Description>Sysprep OOBE Reboot</Description>
+                    <Path>%SystemRoot%\System32\Sysprep\Sysprep.exe /OOBE /Reboot</Path>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+    </settings>
+</unattend>
+'@
+<# if ($ApplyUnattendAE) {
+    Write-Verbose -Verbose "Setting AutoPilot Unattend.xml at $UnattendPath"
+    $UnattendAuditModeAutoPilot | Out-File -FilePath $UnattendPath -Encoding utf8
+    Write-Verbose -Verbose "Applying Unattend"
+    Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
+} #>
+<# Write-Verbose -Verbose "This computer will restart in 30 seconds"
+Start-Sleep -Seconds 30
+Get-OSDWinPE -Reboot
+Start-Sleep -Seconds 10
+Exit 0 #>
