@@ -8,7 +8,8 @@ Write-Host ""
 #===================================================================================================
 #   OSDCloud Options
 #===================================================================================================
-Write-Host "FOR TESTING ONLY, NON-PRODUCTION"
+Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT.  I'M JUST SHOWING OFF, REALLY"
+Write-Warning "FOR TESTING ONLY, NON-PRODUCTION"
 Write-Host -ForegroundColor DarkCyan "================================================================="
 
 Write-Host "AUTO" -ForegroundColor Green -BackgroundColor Black -NoNewline
@@ -20,11 +21,17 @@ Write-Host "    Clear-LocalDisk"
 Write-Host "   2" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    New-OSDisk"
 
+Write-Host "   3" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Dell - Download and Update BIOS"
+
 Write-Host "   4" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Install-Module OSDSUS"
 
 Write-Host "   5" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Download Windows 10 20H2 x64"
+
+Write-Host "   6" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Dell - Download and Expand Driver Cab"
 
 Write-Host "   X" -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Exit"
@@ -42,6 +49,7 @@ until (
         ($BuildImage -eq '3') -or
         ($BuildImage -eq '4') -or
         ($BuildImage -eq '5') -or
+        ($BuildImage -eq '6') -or
         ($BuildImage -eq 'X')
     ) 
 )
@@ -116,6 +124,12 @@ if (-NOT (Get-PSDrive -Name 'C')) {
     Break
 }
 #===================================================================================================
+#   Update-MyDellBIOS
+#===================================================================================================
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '3')) {
+    Update-MyDellBIOS
+}
+#===================================================================================================
 #   Install OSDSUS
 #===================================================================================================
 if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '4')) {
@@ -145,14 +159,14 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '5')) {
         Break
     }
 }
-
-
-
-
-
-
-
-
+#===================================================================================================
+#   Download Drivers
+#===================================================================================================
+if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '6')) {
+    if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+        Save-MyDellDriverCab
+    }
+}
 #===================================================================================================
 #   Apply OS
 #===================================================================================================
