@@ -1,30 +1,14 @@
+#===================================================================================================
+#   Start-OSDCloud
+#===================================================================================================
 $GitHubRepo = 'https://github.com/OSDeploy/OSDCloud/blob/main'
 $GitHubScript = 'Start-OSDCloud.ps1'
-
 Write-Host "Starting $GitHubRepo/$GitHubScript" -Foregroundcolor Cyan
-
 Write-Host ""
 #===================================================================================================
-#   Get Location
+#   OSDCloud Options
 #===================================================================================================
-$GetPSScriptRoot = Get-Item $PSScriptRoot
-$GetPSDrive = ($GetPSScriptRoot).PSDrive
-$GetConnect = ($GetPSScriptRoot).FullName
-$DeployRoot = (Get-Item $PSScriptRoot).parent.FullName
-$DeployPath = ($DeployRoot -split ":")[1]
-#===================================================================================================
-#   Start Menu
-#===================================================================================================
-Clear-Host
-Write-Host -ForegroundColor DarkCyan "================================================================="
-if ($GetUSBDisk) {
-    Write-Host "BHIMAGE Connect on $DeployRoot [$($GetUSBDisk.FriendlyName)]" -ForegroundColor Cyan
-} else {
-    Write-Host "BHIMAGE Connect on $DeployRoot" -ForegroundColor Cyan
-}
 Write-Host "FOR TESTING ONLY, NON-PRODUCTION"
-#Write-Host -ForegroundColor DarkGray "PSDrive = $GetPSDrive"
-#Write-Host -ForegroundColor DarkGray "Connect = $GetConnect"
 Write-Host -ForegroundColor DarkCyan "================================================================="
 
 Write-Host " A  " -ForegroundColor Green -BackgroundColor Black -NoNewline
