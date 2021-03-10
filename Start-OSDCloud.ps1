@@ -5,8 +5,6 @@ function Write-TicTock {
     $TicTock = Get-Date
     Write-Host -ForegroundColor White "$(($TicTock).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 }
-
-
 #===================================================================================================
 #   Start-OSDCloud
 #===================================================================================================
@@ -36,10 +34,10 @@ Write-Host "3   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Dell - Download and Update BIOS"
 
 Write-Host "4   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Download Windows 10 20H2 x64 Enterprise"
+Write-Host "    Download Windows 10 ESD - 20H2 x64 Enterprise"
 
 Write-Host "5   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Apply Windows 10 20H2 x64 Enterprise"
+Write-Host "    Expand Windows 10 ESD - 20H2 x64 Enterprise"
 
 Write-Host "6   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Dell - Download, Expand, and Apply Driver Cab"
@@ -85,8 +83,8 @@ $RequiresWinPE          = $true
 #===================================================================================================
 if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) { 
     Write-TicTock; Write-Host "cURL is required for this process to work"
-   pause
-   Break
+    Start-Sleep -Seconds 10
+    Break
 }
 #===================================================================================================
 #   WinPE
@@ -94,34 +92,33 @@ if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) {
 if ($RequiresWinPE) {
     if ((Get-OSDGather -Property IsWinPE) -eq $false) {
         Write-TicTock; Write-Warning "$BuildName can only be run from WinPE"
-        pause
+        Start-Sleep -Seconds 10
         Break
     }
 }
 #===================================================================================================
 #   Remove USB Drives
 #===================================================================================================
-if (Get-USBDisk) {
+<# if (Get-USBDisk) {
     do {
         Write-TicTock; Write-Warning "Remove all attached USB Drives at this time ..."
         $RemoveUSB = $true
         pause
     }
     while (Get-USBDisk)
-}
-
+} #>
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor Cyan        "Enabling High Performance Power Plan"
+Write-TicTock
+Write-Host -ForegroundColor Green       "Enabling High Performance Power Plan"
 Write-Host -ForegroundColor Gray        "Get-OSDPower -Property High"
-Write-Host -ForegroundColor DarkCyan    "================================================================="
 Get-OSDPower -Property High
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '1')) {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor Cyan        "Clearing Local Disks"
+    Write-TicTock
+    Write-Host -ForegroundColor Green       "Clearing Local Disks"
     Write-Host -ForegroundColor Gray        "Clear-LocalDisk -Force"
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Write-Warning "This computer will be prepared for Windows Build"
     Write-Warning "All Local Hard Drives will be wiped and all data will be lost"
     Write-Host ""
@@ -132,9 +129,9 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '2')) {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor Cyan        "Create New OSDisk"
+    Write-TicTock
+    Write-Host -ForegroundColor Green       "Create New OSDisk"
     Write-Host -ForegroundColor Gray        "New-OSDisk -Force"
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
     New-OSDisk -Force
     Start-Sleep -Seconds 3
 }
@@ -146,20 +143,20 @@ if (-NOT (Get-PSDrive -Name 'C')) {
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '3')) {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor Cyan        "Download and Update Dell BIOS"
+    Write-TicTock
+    Write-Host -ForegroundColor Green       "Download and Update Dell BIOS (this is not working yet)"
     Write-Host -ForegroundColor Gray        "Update-MyDellBIOS"
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Update-MyDellBIOS
 }
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '4')) {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor Cyan        "Downloading Windows 10 Image"
+    Write-TicTock
+    Write-Host -ForegroundColor Green       "Download Windows 10 ESD"
     Write-Host -ForegroundColor Gray        "Install-Module OSDSUS -Force"
     Write-Host -ForegroundColor Gray        "Import-Module OSDSUS -Force"
     Write-Host -ForegroundColor Gray        "Get-OSDSUS -Catalog FeatureUpdate"
     Write-Host -ForegroundColor Gray        "cURL Download"
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Install-Module OSDSUS -Force
     Import-Module OSDSUS -Force
 
@@ -167,7 +164,6 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
         New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
     }
 
-    Write-Verbose "Finding Windows 10 downloads with OSDSUS" -Verbose
     $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
 
     if (-NOT ($WindowsESD)) {
@@ -179,7 +175,9 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
     $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
 
     if (-NOT (Test-Path $OutFile)) {
-        Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
+        Write-Host "Downloading Windows 10 using cURL" -Foregroundcolor Cyan
+        Write-Host "Source: $Source" -Foregroundcolor Cyan
+        Write-Host "Destination: $OutFile" -Foregroundcolor Cyan
         #cmd /c curl.exe -o "$Destination" $Source
         & curl.exe --location --output "$OutFile" --url $Source
         #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
@@ -193,9 +191,9 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '5')) {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor Cyan        "Downloading Windows 10 Image"
+    Write-TicTock
+    Write-Host -ForegroundColor Green       "Expand Windows 10 ESD"
     Write-Host -ForegroundColor Gray        "Expand-WindowsImage"
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
 
     if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
         New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
@@ -215,9 +213,9 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '6')) {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor Cyan        "Download and Expand Dell Driver Cab"
+    Write-TicTock
+    Write-Host -ForegroundColor Green       "Download and Expand Dell Driver Cab"
     Write-Host -ForegroundColor Gray        "Save-MyDellDriverCab"
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Save-MyDellDriverCab
 }
 #===================================================================================================
@@ -246,9 +244,9 @@ $UnattendDrivers = @'
 '@
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor Cyan        "Applying C:\Drivers"
+Write-TicTock
+Write-Host -ForegroundColor Green       "Applying C:\Drivers using Unattend.xml"
 Write-Host -ForegroundColor Gray        "Use-WindowsUnattend"
-Write-Host -ForegroundColor DarkCyan    "================================================================="
 
 $UnattendPath = Join-Path $PathPanther 'Unattend.xml'
 Write-Host -ForegroundColor Cyan "Setting Driver Unattend.xml at $UnattendPath"
@@ -257,130 +255,6 @@ $UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
 Write-Host -ForegroundColor Cyan "Applying Unattend ... this may take a while ..."
 Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
 #===================================================================================================
-
-
-
-
-
-
-
-
-
-
-#   Apply OS
-#===================================================================================================
-<# try {Expand-WindowsImage -ImagePath $OperatingSystem -ApplyPath "C:\" -Index 1 -ErrorAction Ignore}
-catch {Write-Host "Writing Image"} #>
-
-#dism /apply-image /imagefile:"$OperatingSystem\OS\Sources\install.swm" /SWMFile:"$OperatingSystem\OS\Sources\install*.swm" /index:1 /applydir:c:\
-
-<# $SystemDrive = Get-Partition | Where-Object {$_.Type -eq 'System'} | Select-Object -First 1
-$SystemDrive | Set-Partition -NewDriveLetter 'S' #>
-#bcdboot C:\Windows /s S: /f ALL
-#$SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
-#===================================================================================================
-#   Create Directories
-#===================================================================================================
-<# $PathENTPilot = 'C:\Windows\Provisioning\ENTPilot'
-if (-NOT (Test-Path $PathENTPilot)) {
-    Write-Warning "An error has occurred finding $PathENTPilot"
-    Write-Warning "ENTPilot will exit"
-    Break
-}
-$PathPanther = 'C:\Windows\Panther'
-if (-NOT (Test-Path $PathPanther)) {
-    New-Item -Path $PathPanther -ItemType Directory -Force | Out-Null
-}
-
-$ENTPilotConfigurationFile = Join-Path $PathENTPilot 'ENTPilotConfigurationFile.json'
- #>
-#===================================================================================================
-#   Apply ENTPilot
-#===================================================================================================
-<# if ($ENTPilotProd -or $ENTPilotDev) {
-    Write-Verbose -Verbose "Setting $ENTPilotConfigurationFile"
-    if ($ENTPilotProd) {
-        $ENTPilotJsonProd | Out-File -FilePath $ENTPilotConfigurationFile -Encoding ASCII
-    }
-    if ($ENTPilotDev) {
-        $ENTPilotJsonDev | Out-File -FilePath $ENTPilotConfigurationFile -Encoding ASCII
-    }
-} #>
-#===================================================================================================
-#   Apply Drivers
-#===================================================================================================
-$UnattendDrivers = @'
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-	<settings pass="offlineServicing">
-		<component name="Microsoft-Windows-PnpCustomizationsNonWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-			<DriverPaths>
-				<PathAndCredentials wcm:keyValue="1" wcm:action="add">
-					<Path>C:\Drivers</Path>
-				</PathAndCredentials>
-			</DriverPaths>
-		</component>
-	</settings>
-</unattend>
-'@
-<# if ($ApplyDrivers) {
-    & $Drivers\Deploy-OSDDrivers.ps1
-    Write-Verbose -Verbose "Copying Drivers ... this may take a while ..."
-} #>
-#===================================================================================================
-#   Apply ApplyUnattendAE
-#===================================================================================================
-$UnattendAuditModeENTPilot = @'
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Reseal>
-                <Mode>Audit</Mode>
-            </Reseal>
-        </component>
-    </settings>
-    <settings pass="auditUser">
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <Description>Set ExecutionPolicy Bypass</Description>
-                    <Path>PowerShell -WindowStyle Hidden -Command "Set-ExecutionPolicy Bypass -Force"</Path>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
-                    <Description>Configure ENTPilot</Description>
-                    <Path>PowerShell.exe -WindowStyle Minimized -File "C:\Program Files\WindowsPowerShell\Scripts\Upload-WindowsENTpilotDeviceInfo.ps1" -TenantName "bakerhughes.onmicrosoft.com" -GroupTag Enterprise</Path>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
-                    <Description>ENTPilot Sync Delay</Description>
-                    <Path>PowerShell.exe -WindowStyle Minimized -Command Write-Host "Please wait up to 10 minutes ...";Start-Sleep -Seconds 600</Path>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>4</Order>
-                    <Description>Set ExecutionPolicy RemoteSigned</Description>
-                    <Path>PowerShell -WindowStyle Hidden -Command "Set-ExecutionPolicy RemoteSigned -Force"</Path>
-                </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>5</Order>
-                    <Description>Sysprep OOBE Reboot</Description>
-                    <Path>%SystemRoot%\System32\Sysprep\Sysprep.exe /OOBE /Reboot</Path>
-                </RunSynchronousCommand>
-            </RunSynchronous>
-        </component>
-    </settings>
-</unattend>
-'@
-<# if ($ApplyUnattendAE) {
-    Write-Verbose -Verbose "Setting ENTPilot Unattend.xml at $UnattendPath"
-    $UnattendAuditModeENTPilot | Out-File -FilePath $UnattendPath -Encoding utf8
-    Write-Verbose -Verbose "Applying Unattend"
-    Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
-} #>
-<# Write-Verbose -Verbose "This computer will restart in 30 seconds"
-Start-Sleep -Seconds 30
-Get-OSDWinPE -Reboot
-Start-Sleep -Seconds 10
-Exit 0 #>
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-TicTock
+Write-Host -ForegroundColor Green       "OSDCloud is complete and can be rebooted at this time"
