@@ -142,11 +142,14 @@ if (-NOT (Get-PSDrive -Name 'C')) {
 }
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '3')) {
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-TicTock
-    Write-Host -ForegroundColor Green       "Download and Update Dell BIOS (this is not working yet)"
-    Write-Host -ForegroundColor Gray        "Update-MyDellBIOS"
-    Update-MyDellBIOS
+    if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+        Write-Host -ForegroundColor DarkCyan    "================================================================="
+        Write-TicTock
+        Write-Host -ForegroundColor Green       "Download and Update Dell BIOS (this is not working yet)"
+        Write-Host -ForegroundColor Gray        "Update-MyDellBIOS"
+        Update-MyDellBIOS
+
+    }
 }
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '4')) {
@@ -212,11 +215,13 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
 }
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '6')) {
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-TicTock
-    Write-Host -ForegroundColor Green       "Download and Expand Dell Driver Cab"
-    Write-Host -ForegroundColor Gray        "Save-MyDellDriverCab"
-    Save-MyDellDriverCab
+    if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+        Write-Host -ForegroundColor DarkCyan    "================================================================="
+        Write-TicTock
+        Write-Host -ForegroundColor Green       "Download and Expand Dell Driver Cab"
+        Write-Host -ForegroundColor Gray        "Save-MyDellDriverCab"
+        Save-MyDellDriverCab
+    }
 }
 #===================================================================================================
 $PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
