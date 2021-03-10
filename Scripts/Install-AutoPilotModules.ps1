@@ -1,0 +1,1 @@
+Save-Module -Name AzureAD -Path 'C:\Program Files\WindowsPowerShell\Modules' -Verbose
