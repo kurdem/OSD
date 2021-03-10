@@ -186,9 +186,13 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
         Break
     }
 
-    if ($BuildImage -eq 'ENT') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6}
-    if ($BuildImage -eq 'EDU') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4}
-    if ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8}
+    if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
+        New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
+    }
+
+    if ($BuildImage -eq 'ENT') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6 -ScratchDirectory 'C:\OSDCloud\Temp'}
+    if ($BuildImage -eq 'EDU') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4 -ScratchDirectory 'C:\OSDCloud\Temp'}
+    if ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
 
     if (-NOT (Get-PSDrive -Name S)) {
         
