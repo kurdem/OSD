@@ -21,28 +21,34 @@ Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT.  I'M JUST SHOWING OFF, REALLY"
 Write-Warning "FOR TESTING ONLY, NON-PRODUCTION"
 Write-Host -ForegroundColor DarkCyan "================================================================="
 
-Write-Host "AUTO" -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Automated Everything"
+Write-Host "ENT " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Windows 10 x64 20H1 Enterprise"
 
-Write-Host "   1" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "EDU " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Windows 10 x64 20H1 Education"
+
+Write-Host "PRO " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Windows 10 x64 20H1 Pro"
+
+Write-Host "1   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Clear-LocalDisk"
 
-Write-Host "   2" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "2   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    New-OSDisk"
 
-Write-Host "   3" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "3   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Dell - Download and Update BIOS"
 
-Write-Host "   4" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "4   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Install-Module OSDSUS"
 
-Write-Host "   5" -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Download Windows 10 20H2 x64"
+Write-Host "5   " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Download and Apply Windows 10 20H2 x64"
 
-Write-Host "   6" -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Dell - Download and Expand Driver Cab"
+Write-Host "6   " -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "    Dell - Download, Expand, and Apply Driver Cab"
 
-Write-Host "   X" -ForegroundColor Green -BackgroundColor Black -NoNewline
+Write-Host "X   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Exit"
 
 Write-Host ""
@@ -52,7 +58,9 @@ do {
 }
 until (
     (
-        ($BuildImage -eq 'AUTO') -or
+        ($BuildImage -eq 'ENT') -or
+        ($BuildImage -eq 'EDU') -or
+        ($BuildImage -eq 'PRO') -or
         ($BuildImage -eq '1') -or
         ($BuildImage -eq '2') -or
         ($BuildImage -eq '3') -or
@@ -112,7 +120,7 @@ Get-OSDPower -Property High
 #===================================================================================================
 #   Clear Local Disks
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '1')) {
+if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '1')) {
     Write-Warning "This computer will be prepared for Windows Build"
     Write-Warning "All Local Hard Drives will be wiped and all data will be lost"
     Write-Host ""
@@ -123,7 +131,7 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '1')) {
 #===================================================================================================
 #   Create OSDisk
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '2')) {
+if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '2')) {
     New-OSDisk -Force
     Start-Sleep -Seconds 3
 }
@@ -135,45 +143,61 @@ if (-NOT (Get-PSDrive -Name 'C')) {
 #===================================================================================================
 #   Update-MyDellBIOS
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '3')) {
+if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '3')) {
     Update-MyDellBIOS
 }
 #===================================================================================================
 #   Install OSDSUS
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '4')) {
+if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '4')) {
     Install-Module OSDSUS -Force
     Import-Module OSDSUS -Force
 }
 #===================================================================================================
 #   Download Windows 10
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '5')) {
+if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '5')) {
 
     if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
         New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
     }
     
-    Write-Verbose "Finding Windows 10 downloads with OSDSUS" -Verbose
-    $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
+    if (-NOT (Test-Path $OutFile)) {
 
-    if ($WindowsESD) {
-        $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
-        $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
+        Write-Verbose "Finding Windows 10 downloads with OSDSUS" -Verbose
+        $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
 
-        Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
-        #cmd /c curl.exe -o "$Destination" $Source
-        & curl.exe --location --output "$OutFile" --url $Source
-        #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
-    } else {
-        Write-Warning "Could not find a Windows 10 download"
+        if ($WindowsESD) {
+            $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
+            $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
+
+            Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
+            #cmd /c curl.exe -o "$Destination" $Source
+            & curl.exe --location --output "$OutFile" --url $Source
+            #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
+        } else {
+            Write-Warning "Could not find a Windows 10 download"
+            Break
+        }
+    }
+
+    if (-NOT (Test-Path $OutFile)) {
+        Write-Warning "Something went wrong in the download"
         Break
+    }
+
+    if ($BuildImage -eq 'ENT') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6}
+    if ($BuildImage -eq 'EDU') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4}
+    if ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8}
+
+    if (-NOT (Get-PSDrive -Name S)) {
+        
     }
 }
 #===================================================================================================
 #   Download Drivers
 #===================================================================================================
-if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '6')) {
+if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '6')) {
     Save-MyDellDriverCab
 }
 #===================================================================================================
@@ -191,10 +215,10 @@ $SystemDrive | Set-Partition -NewDriveLetter 'S' #>
 #===================================================================================================
 #   Create Directories
 #===================================================================================================
-<# $PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
-if (-NOT (Test-Path $PathAutoPilot)) {
-    Write-Warning "An error has occurred finding $PathAutoPilot"
-    Write-Warning "AutoPilot will exit"
+<# $PathENTPilot = 'C:\Windows\Provisioning\ENTPilot'
+if (-NOT (Test-Path $PathENTPilot)) {
+    Write-Warning "An error has occurred finding $PathENTPilot"
+    Write-Warning "ENTPilot will exit"
     Break
 }
 $PathPanther = 'C:\Windows\Panther'
@@ -202,18 +226,18 @@ if (-NOT (Test-Path $PathPanther)) {
     New-Item -Path $PathPanther -ItemType Directory -Force | Out-Null
 }
 
-$AutoPilotConfigurationFile = Join-Path $PathAutoPilot 'AutoPilotConfigurationFile.json'
+$ENTPilotConfigurationFile = Join-Path $PathENTPilot 'ENTPilotConfigurationFile.json'
 $UnattendPath = Join-Path $PathPanther 'Unattend.xml' #>
 #===================================================================================================
-#   Apply AutoPilot
+#   Apply ENTPilot
 #===================================================================================================
-<# if ($AutoPilotProd -or $AutoPilotDev) {
-    Write-Verbose -Verbose "Setting $AutoPilotConfigurationFile"
-    if ($AutoPilotProd) {
-        $AutoPilotJsonProd | Out-File -FilePath $AutoPilotConfigurationFile -Encoding ASCII
+<# if ($ENTPilotProd -or $ENTPilotDev) {
+    Write-Verbose -Verbose "Setting $ENTPilotConfigurationFile"
+    if ($ENTPilotProd) {
+        $ENTPilotJsonProd | Out-File -FilePath $ENTPilotConfigurationFile -Encoding ASCII
     }
-    if ($AutoPilotDev) {
-        $AutoPilotJsonDev | Out-File -FilePath $AutoPilotConfigurationFile -Encoding ASCII
+    if ($ENTPilotDev) {
+        $ENTPilotJsonDev | Out-File -FilePath $ENTPilotConfigurationFile -Encoding ASCII
     }
 } #>
 #===================================================================================================
@@ -246,7 +270,7 @@ $UnattendDrivers = @'
 #===================================================================================================
 #   Apply ApplyUnattendAE
 #===================================================================================================
-$UnattendAuditModeAutoPilot = @'
+$UnattendAuditModeENTPilot = @'
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <settings pass="oobeSystem">
@@ -266,12 +290,12 @@ $UnattendAuditModeAutoPilot = @'
                 </RunSynchronousCommand>
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
-                    <Description>Configure AutoPilot</Description>
-                    <Path>PowerShell.exe -WindowStyle Minimized -File "C:\Program Files\WindowsPowerShell\Scripts\Upload-WindowsAutopilotDeviceInfo.ps1" -TenantName "bakerhughes.onmicrosoft.com" -GroupTag Enterprise</Path>
+                    <Description>Configure ENTPilot</Description>
+                    <Path>PowerShell.exe -WindowStyle Minimized -File "C:\Program Files\WindowsPowerShell\Scripts\Upload-WindowsENTpilotDeviceInfo.ps1" -TenantName "bakerhughes.onmicrosoft.com" -GroupTag Enterprise</Path>
                 </RunSynchronousCommand>
                 <RunSynchronousCommand wcm:action="add">
                     <Order>3</Order>
-                    <Description>AutoPilot Sync Delay</Description>
+                    <Description>ENTPilot Sync Delay</Description>
                     <Path>PowerShell.exe -WindowStyle Minimized -Command Write-Host "Please wait up to 10 minutes ...";Start-Sleep -Seconds 600</Path>
                 </RunSynchronousCommand>
                 <RunSynchronousCommand wcm:action="add">
@@ -290,8 +314,8 @@ $UnattendAuditModeAutoPilot = @'
 </unattend>
 '@
 <# if ($ApplyUnattendAE) {
-    Write-Verbose -Verbose "Setting AutoPilot Unattend.xml at $UnattendPath"
-    $UnattendAuditModeAutoPilot | Out-File -FilePath $UnattendPath -Encoding utf8
+    Write-Verbose -Verbose "Setting ENTPilot Unattend.xml at $UnattendPath"
+    $UnattendAuditModeENTPilot | Out-File -FilePath $UnattendPath -Encoding utf8
     Write-Verbose -Verbose "Applying Unattend"
     Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
 } #>
