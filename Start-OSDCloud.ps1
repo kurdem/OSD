@@ -159,10 +159,12 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '5')) {
 
     if ($WindowsESD) {
         $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
-        $Destination = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
+        $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
 
         Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
-        cmd /c curl.exe -o "$Destination" $Source
+        #cmd /c curl.exe -o "$Destination" $Source
+        & curl.exe --location --output "$OutFile" --url $Source
+        #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
     } else {
         Write-Warning "Could not find a Windows 10 download"
         Break
