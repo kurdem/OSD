@@ -20,9 +20,10 @@ $UnattendDrivers = @'
 </unattend>
 '@
 
-Write-Verbose -Verbose "Setting Driver $UnattendPath"
+
 $UnattendPath = Join-Path $PathPanther 'Unattend.xml'
+Write-Verbose -Verbose "Setting Driver $UnattendPath"
 $UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
 
 Write-Verbose -Verbose "Applying Use-WindowsUnattend $UnattendPath"
-Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
+Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath
