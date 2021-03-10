@@ -13,14 +13,10 @@ function Write-TicTock {
 $GitHubRepo = 'https://github.com/OSDeploy/OSDCloud/blob/main'
 $GitHubScript = 'Start-OSDCloud.ps1'
 Write-TicTock; Write-Host "$GitHubRepo/$GitHubScript" -Foregroundcolor Cyan
-Write-Host ""
-#===================================================================================================
-#   OSDCloud Options
-#===================================================================================================
+Write-Host -ForegroundColor DarkCyan "================================================================="
 Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT.  I'M JUST SHOWING OFF, REALLY"
 Write-Warning "FOR TESTING ONLY, NON-PRODUCTION"
 Write-Host -ForegroundColor DarkCyan "================================================================="
-
 Write-Host "ENT " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Windows 10 x64 20H1 Enterprise"
 
@@ -40,18 +36,17 @@ Write-Host "3   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Dell - Download and Update BIOS"
 
 Write-Host "4   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Install-Module OSDSUS"
+Write-Host "    Download Windows 10 20H2 x64 Enterprise"
 
 Write-Host "5   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Download and Apply Windows 10 20H2 x64"
+Write-Host "    Apply Windows 10 20H2 x64 Enterprise"
 
 Write-Host "6   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Dell - Download, Expand, and Apply Driver Cab"
 
 Write-Host "X   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Exit"
-
-Write-Host ""
+Write-Host -ForegroundColor DarkCyan "================================================================="
 
 do {
     $BuildImage = Read-Host -Prompt "Enter an option, or X to Exit"
@@ -67,6 +62,7 @@ until (
         ($BuildImage -eq '4') -or
         ($BuildImage -eq '5') -or
         ($BuildImage -eq '6') -or
+        ($BuildImage -eq '7') -or
         ($BuildImage -eq 'X')
     ) 
 )
@@ -113,14 +109,19 @@ if (Get-USBDisk) {
     }
     while (Get-USBDisk)
 }
+
 #===================================================================================================
-#   Enable High Performance Power Plan
-#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor Cyan        "Enabling High Performance Power Plan"
+Write-Host -ForegroundColor Gray        "Get-OSDPower -Property High"
+Write-Host -ForegroundColor DarkCyan    "================================================================="
 Get-OSDPower -Property High
 #===================================================================================================
-#   Clear Local Disks
-#===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '1')) {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor Cyan        "Clearing Local Disks"
+    Write-Host -ForegroundColor Gray        "Clear-LocalDisk -Force"
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Write-Warning "This computer will be prepared for Windows Build"
     Write-Warning "All Local Hard Drives will be wiped and all data will be lost"
     Write-Host ""
@@ -129,82 +130,143 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
     Clear-LocalDisk -Force
 }
 #===================================================================================================
-#   Create OSDisk
-#===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '2')) {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor Cyan        "Create New OSDisk"
+    Write-Host -ForegroundColor Gray        "New-OSDisk -Force"
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
     New-OSDisk -Force
     Start-Sleep -Seconds 3
 }
-
+#===================================================================================================
 if (-NOT (Get-PSDrive -Name 'C')) {
     Write-Warning "Disk does not seem to be ready.  Can't continue"
     Break
 }
 #===================================================================================================
-#   Update-MyDellBIOS
-#===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '3')) {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor Cyan        "Download and Update Dell BIOS"
+    Write-Host -ForegroundColor Gray        "Update-MyDellBIOS"
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Update-MyDellBIOS
 }
 #===================================================================================================
-#   Install OSDSUS
-#===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '4')) {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor Cyan        "Downloading Windows 10 Image"
+    Write-Host -ForegroundColor Gray        "Install-Module OSDSUS -Force"
+    Write-Host -ForegroundColor Gray        "Import-Module OSDSUS -Force"
+    Write-Host -ForegroundColor Gray        "Get-OSDSUS -Catalog FeatureUpdate"
+    Write-Host -ForegroundColor Gray        "cURL Download"
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Install-Module OSDSUS -Force
     Import-Module OSDSUS -Force
-}
-#===================================================================================================
-#   Download Windows 10
-#===================================================================================================
-if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '5')) {
 
     if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
         New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
     }
-    
+
+    Write-Verbose "Finding Windows 10 downloads with OSDSUS" -Verbose
+    $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
+
+    if (-NOT ($WindowsESD)) {
+        Write-Warning "Could not find a Windows 10 download"
+        Break
+    }
+
+    $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
+    $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
+
     if (-NOT (Test-Path $OutFile)) {
-
-        Write-Verbose "Finding Windows 10 downloads with OSDSUS" -Verbose
-        $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
-
-        if ($WindowsESD) {
-            $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
-            $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
-
-            Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
-            #cmd /c curl.exe -o "$Destination" $Source
-            & curl.exe --location --output "$OutFile" --url $Source
-            #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
-        } else {
-            Write-Warning "Could not find a Windows 10 download"
-            Break
-        }
+        Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
+        #cmd /c curl.exe -o "$Destination" $Source
+        & curl.exe --location --output "$OutFile" --url $Source
+        #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
     }
 
     if (-NOT (Test-Path $OutFile)) {
         Write-Warning "Something went wrong in the download"
         Break
     }
+}
+#===================================================================================================
+if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '5')) {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor Cyan        "Downloading Windows 10 Image"
+    Write-Host -ForegroundColor Gray        "Expand-WindowsImage"
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
 
     if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
         New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
     }
 
-    if ($BuildImage -eq 'ENT') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6 -ScratchDirectory 'C:\OSDCloud\Temp'}
     if ($BuildImage -eq 'EDU') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4 -ScratchDirectory 'C:\OSDCloud\Temp'}
-    if ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
+    elseif ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
+    else {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6 -ScratchDirectory 'C:\OSDCloud\Temp'}
 
+    $SystemDrive = Get-Partition | Where-Object {$_.Type -eq 'System'} | Select-Object -First 1
     if (-NOT (Get-PSDrive -Name S)) {
-        
+        $SystemDrive | Set-Partition -NewDriveLetter 'S'
     }
+    bcdboot C:\Windows /s S: /f ALL
+    $SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
 }
 #===================================================================================================
-#   Download Drivers
-#===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '6')) {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor Cyan        "Download and Expand Dell Driver Cab"
+    Write-Host -ForegroundColor Gray        "Save-MyDellDriverCab"
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
     Save-MyDellDriverCab
 }
 #===================================================================================================
+$PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
+if (-NOT (Test-Path $PathAutoPilot)) {
+    New-Item -Path $PathAutoPilot -ItemType Directory -Force | Out-Null
+}
+$PathPanther = 'C:\Windows\Panther'
+if (-NOT (Test-Path $PathPanther)) {
+    New-Item -Path $PathPanther -ItemType Directory -Force | Out-Null
+}
+#===================================================================================================
+$UnattendDrivers = @'
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="offlineServicing">
+        <component name="Microsoft-Windows-PnpCustomizationsNonWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DriverPaths>
+                <PathAndCredentials wcm:keyValue="1" wcm:action="add">
+                    <Path>C:\Drivers</Path>
+                </PathAndCredentials>
+            </DriverPaths>
+        </component>
+    </settings>
+</unattend>
+'@
+#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor Cyan        "Applying C:\Drivers"
+Write-Host -ForegroundColor Gray        "Use-WindowsUnattend"
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+
+$UnattendPath = Join-Path $PathPanther 'Unattend.xml'
+Write-Host -ForegroundColor Cyan "Setting Driver Unattend.xml at $UnattendPath"
+$UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
+
+Write-Host -ForegroundColor Cyan "Applying Unattend ... this may take a while ..."
+Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
+#===================================================================================================
+
+
+
+
+
+
+
+
+
+
 #   Apply OS
 #===================================================================================================
 <# try {Expand-WindowsImage -ImagePath $OperatingSystem -ApplyPath "C:\" -Index 1 -ErrorAction Ignore}
@@ -231,7 +293,7 @@ if (-NOT (Test-Path $PathPanther)) {
 }
 
 $ENTPilotConfigurationFile = Join-Path $PathENTPilot 'ENTPilotConfigurationFile.json'
-$UnattendPath = Join-Path $PathPanther 'Unattend.xml' #>
+ #>
 #===================================================================================================
 #   Apply ENTPilot
 #===================================================================================================
@@ -264,12 +326,6 @@ $UnattendDrivers = @'
 <# if ($ApplyDrivers) {
     & $Drivers\Deploy-OSDDrivers.ps1
     Write-Verbose -Verbose "Copying Drivers ... this may take a while ..."
-    
-    Write-Verbose -Verbose "Setting Driver Unattend.xml at $UnattendPath"
-    $UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
-
-    Write-Verbose -Verbose "Applying Unattend ... this may take a while ..."
-    Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
 } #>
 #===================================================================================================
 #   Apply ApplyUnattendAE
