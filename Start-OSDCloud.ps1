@@ -1,9 +1,18 @@
+function Write-TicTock {
+    [CmdletBinding()]
+    Param ()
+    
+    $TicTock = Get-Date
+    Write-Host -ForegroundColor White "$(($TicTock).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
+}
+
+
 #===================================================================================================
 #   Start-OSDCloud
 #===================================================================================================
 $GitHubRepo = 'https://github.com/OSDeploy/OSDCloud/blob/main'
 $GitHubScript = 'Start-OSDCloud.ps1'
-Write-Host "$GitHubRepo/$GitHubScript" -Foregroundcolor Cyan
+Write-TicTock; Write-Host "$GitHubRepo/$GitHubScript" -Foregroundcolor Cyan
 Write-Host ""
 #===================================================================================================
 #   OSDCloud Options
@@ -58,20 +67,20 @@ Write-Host ""
 
 if ($BuildImage -eq 'X') {
     Write-Host ""
-    Write-Host "Adios!" -ForegroundColor Cyan
+    Write-TicTock; Write-Host "Adios!" -ForegroundColor Cyan
     Write-Host ""
     Break
 }
 #===================================================================================================
 #   Define Build Process
 #===================================================================================================
-$BuildName              = 'Default'
+$BuildName              = 'OSDCloud'
 $RequiresWinPE          = $true
 #===================================================================================================
 #   cURL
 #===================================================================================================
 if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) { 
-   Write-Host "cURL is required for this process to work"
+    Write-TicTock; Write-Host "cURL is required for this process to work"
    pause
    Break
 }
@@ -80,7 +89,7 @@ if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) {
 #===================================================================================================
 if ($RequiresWinPE) {
     if ((Get-OSDGather -Property IsWinPE) -eq $false) {
-        Write-Warning "$BuildName can only be run from WinPE"
+        Write-TicTock; Write-Warning "$BuildName can only be run from WinPE"
         pause
         Break
     }
@@ -90,7 +99,7 @@ if ($RequiresWinPE) {
 #===================================================================================================
 if (Get-USBDisk) {
     do {
-        Write-Warning "Remove all attached USB Drives at this time ..."
+        Write-TicTock; Write-Warning "Remove all attached USB Drives at this time ..."
         $RemoveUSB = $true
         pause
     }
@@ -153,7 +162,7 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '5')) {
         $Destination = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
 
         Write-Host "Downloading Windows 10 using cURL from $Source" -Foregroundcolor Cyan
-        cmd /c curl -o "$Destination" $Source
+        cmd /c curl.exe -o "$Destination" $Source
     } else {
         Write-Warning "Could not find a Windows 10 download"
         Break
@@ -163,9 +172,7 @@ if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '5')) {
 #   Download Drivers
 #===================================================================================================
 if (($BuildImage -eq 'AUTO') -or ($BuildImage -eq '6')) {
-    if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
-        Save-MyDellDriverCab
-    }
+    Save-MyDellDriverCab
 }
 #===================================================================================================
 #   Apply OS
