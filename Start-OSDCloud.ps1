@@ -1,4 +1,26 @@
 #===================================================================================================
+#   OSD Module Requirements
+#===================================================================================================
+[Version]$OSDVersionMin = '21.3.10.2'
+
+if ((Get-Module -Name OSD -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
+    Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
+
+    if ($env:SystemDrive -eq 'X:') {
+        Write-Warning "Updating OSD PowerShell Module"
+        Install-Module OSD -Force
+    } else {
+        Write-Warning "Run the following PowerShell command to update the OSD PowerShell Module"
+        Write-Warning "Install-Module OSD -Force -Verbose"
+        Break
+    }
+}
+
+
+Break
+pause
+
+#===================================================================================================
 #   Set Global Variables
 #===================================================================================================
 $Global:StartOSDCloud = Get-Variable
@@ -13,21 +35,6 @@ $Global:GitHubScript = $Script
 $Global:GitHubScriptPath = "$Global:GitHubRepositoryPath/main/$Global:GitHubScript"
 
 $Global:StartOSDCloudFullName = $Url
-#===================================================================================================
-#   Module Requirements
-#===================================================================================================
-[Version]$OSDVersionMin = '21.3.10.2'
-
-if ((Get-Module -Name OSD -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
-    Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
-    Write-Warning "Updating OSD PowerShell Module"
-}
-
-
-Break
-pause
-
-
 
 
 
@@ -261,11 +268,18 @@ $PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
 if (-NOT (Test-Path $PathAutoPilot)) {
     New-Item -Path $PathAutoPilot -ItemType Directory -Force | Out-Null
 }
+#===================================================================================================
+#   Apply-UnattendDrivers.ps1
+#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "Installing Windows Drivers Offline"
+
 $PathPanther = 'C:\Windows\Panther'
 if (-NOT (Test-Path $PathPanther)) {
     New-Item -Path $PathPanther -ItemType Directory -Force | Out-Null
 }
-#===================================================================================================
+
 $UnattendDrivers = @'
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -280,19 +294,17 @@ $UnattendDrivers = @'
     </settings>
 </unattend>
 '@
-#===================================================================================================
-Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-TicTock
-Write-Host -ForegroundColor Green       "Applying C:\Drivers using Unattend.xml"
-Write-Host -ForegroundColor Gray        "Use-WindowsUnattend"
 
 $UnattendPath = Join-Path $PathPanther 'Unattend.xml'
-Write-Host -ForegroundColor Cyan "Setting Driver Unattend.xml at $UnattendPath"
+Write-Verbose -Verbose "Setting Driver $UnattendPath"
 $UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
 
-Write-Host -ForegroundColor Cyan "Applying Unattend ... this may take a while ..."
-Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath -Verbose
+Write-Verbose -Verbose "Applying Use-WindowsUnattend $UnattendPath"
+Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath
+#===================================================================================================
+#   COMPLETE
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-TicTock
-Write-Host -ForegroundColor Green       "OSDCloud is complete and can be rebooted at this time"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "OSDCloud is complete"
+Write-Host -ForegroundColor DarkCyan    "================================================================="

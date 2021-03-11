@@ -1,4 +1,9 @@
-Write-Host -ForegroundColor White "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+#===================================================================================================
+#   Apply-UnattendDrivers.ps1
+#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "Installing Windows Drivers Offline"
 
 $PathPanther = 'C:\Windows\Panther'
 if (-NOT (Test-Path $PathPanther)) {
@@ -19,7 +24,6 @@ $UnattendDrivers = @'
     </settings>
 </unattend>
 '@
-
 
 $UnattendPath = Join-Path $PathPanther 'Unattend.xml'
 Write-Verbose -Verbose "Setting Driver $UnattendPath"
