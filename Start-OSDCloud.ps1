@@ -86,7 +86,7 @@ Write-Host ""
 
 if ($BuildImage -eq 'X') {
     Write-Host ""
-    Write-TicTock; Write-Host "Adios!" -ForegroundColor Cyan
+    Write-Host "Adios!" -ForegroundColor Cyan
     Write-Host ""
     Break
 }
@@ -94,7 +94,7 @@ if ($BuildImage -eq 'X') {
 #   Require cURL
 #===================================================================================================
 if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) { 
-    Write-TicTock; Write-Host "cURL is required for this process to work"
+    Write-Host "cURL is required for this process to work"
     Start-Sleep -Seconds 10
     Break
 }
@@ -105,7 +105,7 @@ if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) {
 #===================================================================================================
 if ($RequiresWinPE) {
     if ((Get-OSDGather -Property IsWinPE) -eq $false) {
-        Write-TicTock; Write-Warning "$BuildName can only be run from WinPE"
+        Write-Warning "$BuildName can only be run from WinPE"
         Start-Sleep -Seconds 10
         Break
     }
@@ -115,7 +115,7 @@ if ($RequiresWinPE) {
 #===================================================================================================
 if (Get-USBDisk) {
     do {
-        Write-TicTock; Write-Warning "Remove all attached USB Drives at this time ..."
+        Write-Warning "Remove all attached USB Drives at this time ..."
         $RemoveUSB = $true
         pause
     }
@@ -123,7 +123,6 @@ if (Get-USBDisk) {
 }
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-TicTock
 Write-Host -ForegroundColor Green       "Enabling High Performance Power Plan"
 Write-Host -ForegroundColor Gray        "Get-OSDPower -Property High"
 Get-OSDPower -Property High
@@ -152,7 +151,6 @@ if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '4')) {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-TicTock
     Write-Host -ForegroundColor Green       "Download Windows 10 ESD"
     Write-Host -ForegroundColor Gray        "Install-Module OSDSUS -Force"
     Write-Host -ForegroundColor Gray        "Import-Module OSDSUS -Force"
