@@ -16,7 +16,7 @@ $Global:StartOSDCloudFullName = $Url
 #===================================================================================================
 #   Module Requirements
 #===================================================================================================
-[Version]$OSDVersionMin = '21.3.10.1'
+[Version]$OSDVersionMin = '21.3.10.2'
 
 if ((Get-Module -Name OSD -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
     Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
