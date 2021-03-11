@@ -1,4 +1,5 @@
 #===================================================================================================
+#   Scripts/Test-OSDModule.ps1
 #   OSD Module Minimum Version
 #   Since the OSD Module is doing much of the heavy lifting, it is important to ensure that old
 #   OSD Module versions are not used long term as the OSDCloud script can change
@@ -7,7 +8,6 @@
 #   In WinPE, the latest version will be installed automatically
 #   In Windows, this script is stopped and you will need to update manually
 #===================================================================================================
-Clear-Host
 [Version]$OSDVersionMin = '21.3.11.1'
 
 if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
@@ -48,14 +48,7 @@ Write-Host -ForegroundColor DarkCyan    "=======================================
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
 Write-Host -ForegroundColor Green       "Start OSDCloud"
 Write-Host -Foregroundcolor Cyan        $Global:GitHubUrl
-
-
-
-
-
-Write-Host -ForegroundColor DarkCyan "================================================================="
-Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT.  I'M JUST SHOWING OFF, REALLY"
-Write-Warning "FOR TESTING ONLY, NON-PRODUCTION"
+Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT FOR TESTING ONLY"
 Write-Host -ForegroundColor DarkCyan "================================================================="
 Write-Host "ENT " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Windows 10 x64 20H1 Enterprise"
@@ -65,24 +58,6 @@ Write-Host "    Windows 10 x64 20H1 Education"
 
 Write-Host "PRO " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Windows 10 x64 20H1 Pro"
-
-Write-Host "1   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Clear-LocalDisk"
-
-Write-Host "2   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    New-OSDisk"
-
-Write-Host "3   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Dell - Download and Update BIOS"
-
-Write-Host "4   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Download Windows 10 ESD - 20H2 x64 Enterprise"
-
-Write-Host "5   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Expand Windows 10 ESD - 20H2 x64 Enterprise"
-
-Write-Host "6   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Dell - Download, Expand, and Apply Driver Cab"
 
 Write-Host "X   " -ForegroundColor Green -BackgroundColor Black -NoNewline
 Write-Host "    Exit"
@@ -138,14 +113,14 @@ if ($RequiresWinPE) {
 #===================================================================================================
 #   Remove USB Drives
 #===================================================================================================
-<# if (Get-USBDisk) {
+if (Get-USBDisk) {
     do {
         Write-TicTock; Write-Warning "Remove all attached USB Drives at this time ..."
         $RemoveUSB = $true
         pause
     }
     while (Get-USBDisk)
-} #>
+}
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-TicTock
@@ -153,42 +128,26 @@ Write-Host -ForegroundColor Green       "Enabling High Performance Power Plan"
 Write-Host -ForegroundColor Gray        "Get-OSDPower -Property High"
 Get-OSDPower -Property High
 #===================================================================================================
-if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '1')) {
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-TicTock
-    Write-Host -ForegroundColor Green       "Clearing Local Disks"
-    Write-Host -ForegroundColor Gray        "Clear-LocalDisk -Force"
-    Write-Warning "This computer will be prepared for Windows Build"
-    Write-Warning "All Local Hard Drives will be wiped and all data will be lost"
-    Write-Host ""
-    Write-Warning "When you press any key to continue, this process will get started"
-    pause
-    Clear-LocalDisk -Force
-}
+#   Scripts/New-OSDisk.ps1
 #===================================================================================================
-if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '2')) {
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-TicTock
-    Write-Host -ForegroundColor Green       "Create New OSDisk"
-    Write-Host -ForegroundColor Gray        "New-OSDisk -Force"
-    New-OSDisk -Force
-    Start-Sleep -Seconds 3
-}
-#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "Prepare OSDisk"
+Clear-LocalDisk -Force -ShowWarning
+New-OSDisk -Force
+Start-Sleep -Seconds 3
 if (-NOT (Get-PSDrive -Name 'C')) {
     Write-Warning "Disk does not seem to be ready.  Can't continue"
     Break
 }
 #===================================================================================================
-if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '3')) {
-    if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
-        Write-Host -ForegroundColor DarkCyan    "================================================================="
-        Write-TicTock
-        Write-Host -ForegroundColor Green       "Download and Update Dell BIOS (this is not working yet)"
-        Write-Host -ForegroundColor Gray        "Update-MyDellBIOS"
-        Update-MyDellBIOS
-
-    }
+#   Scripts/Update-BIOS.ps1
+#===================================================================================================
+if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+    Write-Host -ForegroundColor Green       "BIOS Update"
+    Update-MyDellBIOS
 }
 #===================================================================================================
 if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '4')) {
@@ -231,44 +190,38 @@ if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PR
     }
 }
 #===================================================================================================
-if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '5')) {
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-TicTock
-    Write-Host -ForegroundColor Green       "Expand Windows 10 ESD"
-    Write-Host -ForegroundColor Gray        "Expand-WindowsImage"
+#   Expand Windows ESD
+#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "Expand Windows ESD"
 
-    if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
-        New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
-    }
+if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
+    New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
+}
 
-    if ($BuildImage -eq 'EDU') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4 -ScratchDirectory 'C:\OSDCloud\Temp'}
-    elseif ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
-    else {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6 -ScratchDirectory 'C:\OSDCloud\Temp'}
+if ($BuildImage -eq 'EDU') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4 -ScratchDirectory 'C:\OSDCloud\Temp'}
+elseif ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
+else {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6 -ScratchDirectory 'C:\OSDCloud\Temp'}
 
-    $SystemDrive = Get-Partition | Where-Object {$_.Type -eq 'System'} | Select-Object -First 1
-    if (-NOT (Get-PSDrive -Name S)) {
-        $SystemDrive | Set-Partition -NewDriveLetter 'S'
-    }
-    bcdboot C:\Windows /s S: /f ALL
-    $SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
+$SystemDrive = Get-Partition | Where-Object {$_.Type -eq 'System'} | Select-Object -First 1
+if (-NOT (Get-PSDrive -Name S)) {
+    $SystemDrive | Set-Partition -NewDriveLetter 'S'
+}
+bcdboot C:\Windows /s S: /f ALL
+$SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
+#===================================================================================================
+#   Download Windows Drivers
+#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "Download Windows Drivers"
+
+if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+    Save-MyDellDriverCab
 }
 #===================================================================================================
-if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '6')) {
-    if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
-        Write-Host -ForegroundColor DarkCyan    "================================================================="
-        Write-TicTock
-        Write-Host -ForegroundColor Green       "Download and Expand Dell Driver Cab"
-        Write-Host -ForegroundColor Gray        "Save-MyDellDriverCab"
-        Save-MyDellDriverCab
-    }
-}
-#===================================================================================================
-$PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
-if (-NOT (Test-Path $PathAutoPilot)) {
-    New-Item -Path $PathAutoPilot -ItemType Directory -Force | Out-Null
-}
-#===================================================================================================
-#   Apply-UnattendDrivers.ps1
+#   Scripts/Apply-Drivers.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
@@ -300,6 +253,33 @@ $UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
 
 Write-Verbose -Verbose "Applying Use-WindowsUnattend $UnattendPath"
 Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath
+#===================================================================================================
+#   Save-AutoPilotModules.ps1
+#===================================================================================================
+Write-Host -ForegroundColor White "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+
+Save-Module -Name WindowsAutoPilotIntune -Path 'C:\Program Files\WindowsPowerShell\Modules' -Verbose
+if (-NOT (Test-Path 'C:\Program Files\WindowsPowerShell\Scripts')) {
+    New-Item -Path 'C:\Program Files\WindowsPowerShell\Scripts' -ItemType Directory -Force | Out-Null
+}
+Save-Script -Name Get-WindowsAutoPilotInfo -Path 'C:\Program Files\WindowsPowerShell\Scripts' -Verbose
+
+$PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
+if (-NOT (Test-Path $PathAutoPilot)) {
+    New-Item -Path $PathAutoPilot -ItemType Directory -Force | Out-Null
+}
+
+
+
+
+
+
+
+
+
+
+
+
 #===================================================================================================
 #   COMPLETE
 #===================================================================================================
