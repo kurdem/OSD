@@ -22,6 +22,10 @@ if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Se
         Break
     }
 }
+if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
+    Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
+    Break
+}
 #===================================================================================================
 #   Global Variables
 #   These are set automatically by the OSD Module 21.3.11+ when executing Start-OSDCloud
@@ -87,6 +91,9 @@ if (-NOT ($Global:OSEdition)) {
         Write-Host ""
         Break
     }
+    if ($BuildImage -eq 'ENT') {$Global:OSEdition = 'Enerprise'}
+    if ($BuildImage -eq 'EDU') {$Global:OSEdition = 'Education'}
+    if ($BuildImage -eq 'PRO') {$Global:OSEdition = 'Pro'}
 }
 #===================================================================================================
 #   Require cURL
@@ -212,7 +219,7 @@ if (-NOT (Get-PSDrive -Name S)) {
     $SystemDrive | Set-Partition -NewDriveLetter 'S'
 }
 bcdboot C:\Windows /s S: /f ALL
-pause
+Start-Sleep -Seconds 10
 $SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
 #===================================================================================================
 #   Scripts/Apply-Drivers.ps1

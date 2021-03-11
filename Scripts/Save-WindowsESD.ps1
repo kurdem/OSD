@@ -2,7 +2,7 @@
 #   Scripts/Save-WindowsESD.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Scripts/Save-WindowsESD.ps1"
 Install-Module OSDSUS -Force
 Import-Module OSDSUS -Force
@@ -29,6 +29,7 @@ if (-NOT (Test-Path $OutFile)) {
     Write-Host "Downloading Windows 10 using cURL" -Foregroundcolor Cyan
     Write-Host "Source: $Source" -Foregroundcolor Cyan
     Write-Host "Destination: $OutFile" -Foregroundcolor Cyan
+    Write-Host "OSCulture: $Global:OSCulture" -Foregroundcolor Cyan
     #cmd /c curl.exe -o "$Destination" $Source
     & curl.exe --location --output "$OutFile" --url $Source
     #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
