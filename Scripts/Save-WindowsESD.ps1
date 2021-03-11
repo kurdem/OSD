@@ -3,15 +3,19 @@
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-Write-Host -ForegroundColor Green       "Download Windows ESD"
+Write-Host -ForegroundColor Green       "Scripts/Save-WindowsESD.ps1"
 Install-Module OSDSUS -Force
 Import-Module OSDSUS -Force
+
+if (-NOT ($Global:OSCulture)) {
+    $Global:OSCulture = 'en-us'
+}
 
 if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
     New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
 }
 
-$WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
+$WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match $Global:OSCulture} | Select-Object -First 1
 
 if (-NOT ($WindowsESD)) {
     Write-Warning "Could not find a Windows 10 download"
