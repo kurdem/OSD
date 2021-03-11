@@ -97,6 +97,7 @@ if (-NOT ($Global:OSEdition)) {
 }
 #===================================================================================================
 #   Require cURL
+#   Without cURL, we can't download the ESD, so if it's not present, then we need to exit
 #===================================================================================================
 if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) { 
     Write-Host "cURL is required for this process to work"
@@ -116,16 +117,7 @@ if ($RequiresWinPE) {
     }
 }
 #===================================================================================================
-#   Remove USB Drives
-#===================================================================================================
-if (Get-USBDisk) {
-    do {
-        Write-Warning "Remove all attached USB Drives at this time ..."
-        $RemoveUSB = $true
-        pause
-    }
-    while (Get-USBDisk)
-}
+#   Set the Power Plan to High Performance
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
@@ -133,26 +125,41 @@ Write-Host -ForegroundColor Green       "Enabling High Performance Power Plan"
 Write-Host -ForegroundColor Gray        "Get-OSDPower -Property High"
 Get-OSDPower -Property High
 #===================================================================================================
+#   Scripts/Initialize-OSDisk.ps1
+#   Don't allow USB Drives at this time so there is no worry about Drive Letters
+#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
+Write-Host -ForegroundColor Green       "Scripts/Initialize-OSDisk.ps1"
+
+$RemoveUSBDrive = $true
+if ($RemoveUSBDrive) {
+    if (Get-USBDisk) {
+        do {
+            Write-Warning "Remove all attached USB Drives until Initialize-OSDisk has completed"
+            $RemoveUSB = $true
+            pause
+        }
+        while (Get-USBDisk)
+    }
+}
+
+Clear-LocalDisk -Force
+New-OSDisk -Force
+Start-Sleep -Seconds 3
+if (-NOT (Get-PSDrive -Name 'C')) {
+    Write-Warning "Disk does not seem to be ready.  Can't continue"
+    Break
+}
+#===================================================================================================
 #   Scripts/Update-BIOS.ps1
 #===================================================================================================
 if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
     Write-Host -ForegroundColor DarkCyan    "================================================================="
     Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
     Write-Host -ForegroundColor Green       "Scripts/Update-BIOS.ps1"
+    Write-Warning "This step is not working as expected ..."
     Update-MyDellBIOS
-}
-#===================================================================================================
-#   Scripts/Initialize-OSDisk.ps1
-#===================================================================================================
-Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
-Write-Host -ForegroundColor Green       "Scripts/Initialize-OSDisk.ps1"
-Clear-LocalDisk -Force -ShowWarning
-New-OSDisk -Force
-Start-Sleep -Seconds 3
-if (-NOT (Get-PSDrive -Name 'C')) {
-    Write-Warning "Disk does not seem to be ready.  Can't continue"
-    Break
 }
 #===================================================================================================
 #   Scripts/Save-WindowsESD.ps1
@@ -174,7 +181,7 @@ if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
 $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match $Global:OSCulture} | Select-Object -First 1
 
 if (-NOT ($WindowsESD)) {
-    Write-Warning "Could not find a Windows 10 download"
+    Write-Warning "Could not find a Windows 10 $Global:OSCulture download"
     Break
 }
 
@@ -182,10 +189,9 @@ $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
 $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
 
 if (-NOT (Test-Path $OutFile)) {
-    Write-Host "Downloading Windows 10 using cURL" -Foregroundcolor Cyan
+    Write-Host "Downloading Windows 10 $Global:OSCulture using cURL" -Foregroundcolor Cyan
     Write-Host "Source: $Source" -Foregroundcolor Cyan
     Write-Host "Destination: $OutFile" -Foregroundcolor Cyan
-    Write-Host "OSCulture: $Global:OSCulture" -Foregroundcolor Cyan
     #cmd /c curl.exe -o "$Destination" $Source
     & curl.exe --location --output "$OutFile" --url $Source
     #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
@@ -205,7 +211,7 @@ Write-Host -ForegroundColor Green       "Scripts/Expand-WindowsESD.ps1"
 if (-NOT ($Global:OSEdition)) {
     $Global:OSEdition = 'Enerprise'
 }
-Write-Host "OSEdition is set to $Global:OSEdition"
+Write-Host "OSEdition is set to $Global:OSEdition" -ForegroundColor Cyan
 
 if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
     New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
@@ -280,4 +286,5 @@ if (-NOT (Test-Path $PathAutoPilot)) {
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "OSDCloud is complete"
+Write-Host -ForegroundColor Green       "You can run additional steps or reboot at this time"
 Write-Host -ForegroundColor DarkCyan    "================================================================="

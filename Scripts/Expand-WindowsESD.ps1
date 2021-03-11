@@ -8,7 +8,7 @@ Write-Host -ForegroundColor Green       "Scripts/Expand-WindowsESD.ps1"
 if (-NOT ($Global:OSEdition)) {
     $Global:OSEdition = 'Enerprise'
 }
-Write-Host "OSEdition is set to $Global:OSEdition"
+Write-Host "OSEdition is set to $Global:OSEdition" -ForegroundColor Cyan
 
 if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
     New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
