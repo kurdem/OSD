@@ -1,9 +1,16 @@
 #===================================================================================================
-#   OSD Module Requirements
+#   OSD Module Minimum Version
+#   Since the OSD Module is doing much of the heavy lifting, it is important to ensure that old
+#   OSD Module versions are not used long term as the OSDCloud script can change
+#   This example allows you to control the Minimum Version allowed.  A Maximum Version can also be
+#   controlled in a similar method
+#   In WinPE, the latest version will be installed automatically
+#   In Windows, this script is stopped and you will need to update manually
 #===================================================================================================
-[Version]$OSDVersionMin = '21.3.10.2'
+Clear-Host
+[Version]$OSDVersionMin = '21.3.11.1'
 
-if ((Get-Module -Name OSD -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
+if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
     Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
 
     if ($env:SystemDrive -eq 'X:') {
@@ -15,42 +22,37 @@ if ((Get-Module -Name OSD -ListAvailable | Sort-Object Version -Descending | Sel
         Break
     }
 }
-
-
-Break
-pause
-
 #===================================================================================================
-#   Set Global Variables
+#   Global Variables
+#   These are set automatically by the OSD Module 21.3.11+ when executing Start-OSDCloud
+#   $Global:GitHubBase = 'https://raw.githubusercontent.com'
+#   $Global:GitHubUser = $User
+#   $Global:GitHubRepository = $Repository
+#   $Global:GitHubBranch = $Branch
+#   $Global:GitHubScript = $Script
+#   $Global:GitHubToken = $Token
+#   $Global:GitHubUrl
+#   As a backup, $Global:OSDCloudVariables is created with Get-Variable
 #===================================================================================================
-$Global:StartOSDCloud = Get-Variable
-
-$Global:GitHubUser = $GitHubUser
-$Global:GitHubUserPath = "https://raw.githubusercontent.com/$Global:GitHubUser"
-
-$Global:GitHubRepository = $Repository
-$Global:GitHubRepositoryPath = "$Global:GitHubUserPath/$Global:GitHubRepository"
-
-$Global:GitHubScript = $Script
-$Global:GitHubScriptPath = "$Global:GitHubRepositoryPath/main/$Global:GitHubScript"
-
-$Global:StartOSDCloudFullName = $Url
-
-
-
-function Write-TicTock {
-    [CmdletBinding()]
-    Param ()
-    
-    $TicTock = Get-Date
-    Write-Host -ForegroundColor White "$(($TicTock).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
-}
+$Global:OSDCloudVariables = Get-Variable
+#===================================================================================================
+#   Build Variables
+#   Set these Variables to control the Build Process
+#===================================================================================================
+$BuildName      = 'OSDCloud'
+$RequiresWinPE  = $true
 #===================================================================================================
 #   Start-OSDCloud
 #===================================================================================================
-$GitHubRepo = 'https://github.com/OSDeploy/OSDCloud/blob/main'
-$GitHubScript = 'Start-OSDCloud.ps1'
-Write-TicTock; Write-Host "$GitHubRepo/$GitHubScript" -Foregroundcolor Cyan
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "Start OSDCloud"
+Write-Host -Foregroundcolor Cyan        $Global:GitHubUrl
+
+
+
+
+
 Write-Host -ForegroundColor DarkCyan "================================================================="
 Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT.  I'M JUST SHOWING OFF, REALLY"
 Write-Warning "FOR TESTING ONLY, NON-PRODUCTION"
@@ -114,12 +116,7 @@ if ($BuildImage -eq 'X') {
     Break
 }
 #===================================================================================================
-#   Define Build Process
-#===================================================================================================
-$BuildName              = 'OSDCloud'
-$RequiresWinPE          = $true
-#===================================================================================================
-#   cURL
+#   Require cURL
 #===================================================================================================
 if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) { 
     Write-TicTock; Write-Host "cURL is required for this process to work"
@@ -127,7 +124,9 @@ if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) {
     Break
 }
 #===================================================================================================
-#   WinPE
+#   Require WinPE
+#   OSDCloud won't continue past this point unless you are in WinPE
+#   The reason for the late failure is so you can test the Menu
 #===================================================================================================
 if ($RequiresWinPE) {
     if ((Get-OSDGather -Property IsWinPE) -eq $false) {
