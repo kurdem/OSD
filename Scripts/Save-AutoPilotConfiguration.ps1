@@ -2,6 +2,10 @@
 #   Scripts/Save-AutoPilotConfiguration.ps1
 #===================================================================================================
 $AutoPilotConfiguration = Select-AutoPilotJson
+
+if ($AutoPilotConfiguration) {
+    $AutoPilotConfiguration
+}
 #===================================================================================================
 #   Scripts/Save-AutoPilotConfiguration.ps1
 #===================================================================================================

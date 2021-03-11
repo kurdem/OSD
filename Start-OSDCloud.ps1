@@ -99,6 +99,10 @@ if (-NOT ($Global:OSEdition)) {
 #   Scripts/Save-AutoPilotConfiguration.ps1
 #===================================================================================================
 $AutoPilotConfiguration = Select-AutoPilotJson
+
+if ($AutoPilotConfiguration) {
+    $AutoPilotConfiguration
+}
 #===================================================================================================
 #   Require cURL
 #   Without cURL, we can't download the ESD, so if it's not present, then we need to exit
