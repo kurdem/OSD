@@ -1,3 +1,36 @@
+#===================================================================================================
+#   Set Global Variables
+#===================================================================================================
+$Global:StartOSDCloud = Get-Variable
+
+$Global:GitHubUser = $GitHubUser
+$Global:GitHubUserPath = "https://raw.githubusercontent.com/$Global:GitHubUser"
+
+$Global:GitHubRepository = $Repository
+$Global:GitHubRepositoryPath = "$Global:GitHubUserPath/$Global:GitHubRepository"
+
+$Global:GitHubScript = $Script
+$Global:GitHubScriptPath = "$Global:GitHubRepositoryPath/main/$Global:GitHubScript"
+
+$Global:StartOSDCloudFullName = $Url
+#===================================================================================================
+#   Module Requirements
+#===================================================================================================
+[Version]$OSDVersionMin = '21.3.10.1'
+
+if ((Get-Module -Name OSD -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
+    Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
+    Write-Warning "Updating OSD PowerShell Module"
+}
+
+
+Break
+pause
+
+
+
+
+
 function Write-TicTock {
     [CmdletBinding()]
     Param ()
