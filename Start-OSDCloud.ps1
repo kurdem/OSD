@@ -96,6 +96,10 @@ if (-NOT ($Global:OSEdition)) {
     if ($BuildImage -eq 'PRO') {$Global:OSEdition = 'Pro'}
 }
 #===================================================================================================
+#   Scripts/Save-AutoPilotConfiguration.ps1
+#===================================================================================================
+$AutoPilotConfiguration = Select-AutoPilotJson
+#===================================================================================================
 #   Require cURL
 #   Without cURL, we can't download the ESD, so if it's not present, then we need to exit
 #===================================================================================================
@@ -275,10 +279,17 @@ if (-NOT (Test-Path 'C:\Program Files\WindowsPowerShell\Scripts')) {
     New-Item -Path 'C:\Program Files\WindowsPowerShell\Scripts' -ItemType Directory -Force | Out-Null
 }
 Save-Script -Name Get-WindowsAutoPilotInfo -Path 'C:\Program Files\WindowsPowerShell\Scripts'
-
+#===================================================================================================
+#   Scripts/Save-AutoPilotConfiguration.ps1
+#===================================================================================================
 $PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
 if (-NOT (Test-Path $PathAutoPilot)) {
     New-Item -Path $PathAutoPilot -ItemType Directory -Force | Out-Null
+}
+$AutoPilotConfigurationFile = Join-Path $PathAutoPilot 'AutoPilotConfigurationFile.json'
+if ($AutoPilotConfiguration) {
+    Write-Verbose -Verbose "Setting $AutoPilotConfigurationFile"
+    $AutoPilotConfiguration | ConvertTo-Json | Out-File -FilePath $AutoPilotConfigurationFile -Encoding ASCII
 }
 #===================================================================================================
 #   COMPLETE

@@ -10,8 +10,3 @@ if (-NOT (Test-Path 'C:\Program Files\WindowsPowerShell\Scripts')) {
     New-Item -Path 'C:\Program Files\WindowsPowerShell\Scripts' -ItemType Directory -Force | Out-Null
 }
 Save-Script -Name Get-WindowsAutoPilotInfo -Path 'C:\Program Files\WindowsPowerShell\Scripts'
-
-$PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
-if (-NOT (Test-Path $PathAutoPilot)) {
-    New-Item -Path $PathAutoPilot -ItemType Directory -Force | Out-Null
-}
