@@ -3,7 +3,10 @@
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-Write-Host -ForegroundColor Green       "Installing Windows Drivers Offline"
+Write-Host -ForegroundColor Green       "Scripts/Apply-Drivers.ps1"
+if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+    Save-MyDellDriverCab
+}
 
 $PathPanther = 'C:\Windows\Panther'
 if (-NOT (Test-Path $PathPanther)) {

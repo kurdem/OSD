@@ -50,45 +50,43 @@ Write-Host -ForegroundColor Green       "Start OSDCloud"
 Write-Host -Foregroundcolor Cyan        $Global:GitHubUrl
 Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT FOR TESTING ONLY"
 Write-Host -ForegroundColor DarkCyan "================================================================="
-Write-Host "ENT " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Windows 10 x64 20H1 Enterprise"
-
-Write-Host "EDU " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Windows 10 x64 20H1 Education"
-
-Write-Host "PRO " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Windows 10 x64 20H1 Pro"
-
-Write-Host "X   " -ForegroundColor Green -BackgroundColor Black -NoNewline
-Write-Host "    Exit"
-Write-Host -ForegroundColor DarkCyan "================================================================="
-
-do {
-    $BuildImage = Read-Host -Prompt "Enter an option, or X to Exit"
-}
-until (
-    (
-        ($BuildImage -eq 'ENT') -or
-        ($BuildImage -eq 'EDU') -or
-        ($BuildImage -eq 'PRO') -or
-        ($BuildImage -eq '1') -or
-        ($BuildImage -eq '2') -or
-        ($BuildImage -eq '3') -or
-        ($BuildImage -eq '4') -or
-        ($BuildImage -eq '5') -or
-        ($BuildImage -eq '6') -or
-        ($BuildImage -eq '7') -or
-        ($BuildImage -eq 'X')
-    ) 
-)
-
-Write-Host ""
-
-if ($BuildImage -eq 'X') {
+#===================================================================================================
+#   Menu
+#===================================================================================================
+if (-NOT ($Global:OSEdition)) {
+    Write-Host "ENT " -ForegroundColor Green -BackgroundColor Black -NoNewline
+    Write-Host "    Windows 10 x64 20H1 Enterprise"
+    
+    Write-Host "EDU " -ForegroundColor Green -BackgroundColor Black -NoNewline
+    Write-Host "    Windows 10 x64 20H1 Education"
+    
+    Write-Host "PRO " -ForegroundColor Green -BackgroundColor Black -NoNewline
+    Write-Host "    Windows 10 x64 20H1 Pro"
+    
+    Write-Host "X   " -ForegroundColor Green -BackgroundColor Black -NoNewline
+    Write-Host "    Exit"
+    Write-Host -ForegroundColor DarkCyan "================================================================="
+    
+    do {
+        $BuildImage = Read-Host -Prompt "Enter an option, or X to Exit"
+    }
+    until (
+        (
+            ($BuildImage -eq 'ENT') -or
+            ($BuildImage -eq 'EDU') -or
+            ($BuildImage -eq 'PRO') -or
+            ($BuildImage -eq 'X')
+        ) 
+    )
+    
     Write-Host ""
-    Write-Host "Adios!" -ForegroundColor Cyan
-    Write-Host ""
-    Break
+    
+    if ($BuildImage -eq 'X') {
+        Write-Host ""
+        Write-Host "Adios!" -ForegroundColor Cyan
+        Write-Host ""
+        Break
+    }
 }
 #===================================================================================================
 #   Require cURL
@@ -127,7 +125,7 @@ Write-Host -ForegroundColor Green       "Enabling High Performance Power Plan"
 Write-Host -ForegroundColor Gray        "Get-OSDPower -Property High"
 Get-OSDPower -Property High
 #===================================================================================================
-#   Scripts/New-OSDisk.ps1
+#   Scripts/Initialize-OSDisk.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
@@ -153,15 +151,19 @@ if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-Write-Host -ForegroundColor Green       "Download Windows ESD"
+Write-Host -ForegroundColor Green       "Scripts/Save-WindowsESD.ps1"
 Install-Module OSDSUS -Force
 Import-Module OSDSUS -Force
+
+if (-NOT ($Global:OSCulture)) {
+    $Global:OSCulture = 'en-us'
+}
 
 if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
     New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
 }
 
-$WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
+$WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match $Global:OSCulture} | Select-Object -First 1
 
 if (-NOT ($WindowsESD)) {
     Write-Warning "Could not find a Windows 10 download"
@@ -185,18 +187,22 @@ if (-NOT (Test-Path $OutFile)) {
     Break
 }
 #===================================================================================================
-#   Expand Windows ESD
+#   Scripts/Expand-WindowsESD.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-Write-Host -ForegroundColor Green       "Expand Windows ESD"
+Write-Host -ForegroundColor Green       "Scripts/Expand-WindowsESD.ps1"
+
+if (-NOT ($Global:OSEdition)) {
+    $Global:OSEdition = 'Enerprise'
+}
 
 if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
     New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
 }
 
-if ($BuildImage -eq 'EDU') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4 -ScratchDirectory 'C:\OSDCloud\Temp'}
-elseif ($BuildImage -eq 'PRO') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
+if ($Global:OSEdition -eq 'Education') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4 -ScratchDirectory 'C:\OSDCloud\Temp'}
+elseif ($Global:OSEdition -eq 'Pro') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
 else {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6 -ScratchDirectory 'C:\OSDCloud\Temp'}
 
 $SystemDrive = Get-Partition | Where-Object {$_.Type -eq 'System'} | Select-Object -First 1
@@ -206,21 +212,14 @@ if (-NOT (Get-PSDrive -Name S)) {
 bcdboot C:\Windows /s S: /f ALL
 $SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
 #===================================================================================================
-#   Download Windows Drivers
-#===================================================================================================
-Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-Write-Host -ForegroundColor Green       "Download Windows Drivers"
-
-if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
-    Save-MyDellDriverCab
-}
-#===================================================================================================
 #   Scripts/Apply-Drivers.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-Write-Host -ForegroundColor Green       "Installing Windows Drivers Offline"
+Write-Host -ForegroundColor Green       "Scripts/Apply-Drivers.ps1"
+if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+    Save-MyDellDriverCab
+}
 
 $PathPanther = 'C:\Windows\Panther'
 if (-NOT (Test-Path $PathPanther)) {
@@ -263,18 +262,6 @@ $PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
 if (-NOT (Test-Path $PathAutoPilot)) {
     New-Item -Path $PathAutoPilot -ItemType Directory -Force | Out-Null
 }
-
-
-
-
-
-
-
-
-
-
-
-
 #===================================================================================================
 #   COMPLETE
 #===================================================================================================
