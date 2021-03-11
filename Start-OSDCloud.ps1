@@ -98,18 +98,28 @@ if (-NOT ($Global:OSEdition)) {
 #===================================================================================================
 #   Scripts/Save-AutoPilotConfiguration.ps1
 #===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
+Write-Host -ForegroundColor Green       "Scripts/Save-AutoPilotConfiguration.ps1"
+
 $AutoPilotConfiguration = Select-AutoPilotJson
 
 if ($AutoPilotConfiguration) {
+    Write-Host -ForegroundColor Cyan "AutoPilotConfigurationFile.json"
     $AutoPilotConfiguration
+} else {
+    Write-Host "AutoPilotConfigurationFile.json will not be configured for this deployment"
 }
 #===================================================================================================
 #   Require cURL
 #   Without cURL, we can't download the ESD, so if it's not present, then we need to exit
 #===================================================================================================
-if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) { 
-    Write-Host "cURL is required for this process to work"
-    Start-Sleep -Seconds 10
+if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
+    Write-Warning "cURL is required for this process to work"
+    Write-Warning "Abort!"
+    Start-Sleep -Seconds 5
     Break
 }
 #===================================================================================================
@@ -119,8 +129,11 @@ if ($null -eq (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) {
 #===================================================================================================
 if ($RequiresWinPE) {
     if ((Get-OSDGather -Property IsWinPE) -eq $false) {
+        Write-Host -ForegroundColor DarkCyan    "================================================================="
+        Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
         Write-Warning "$BuildName can only be run from WinPE"
-        Start-Sleep -Seconds 10
+        Write-Warning "Abort!"
+        Start-Sleep -Seconds 5
         Break
     }
 }
@@ -175,6 +188,11 @@ if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Scripts/Save-WindowsESD.ps1"
+if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
+    New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
+}
+Start-Transcript -Path 'C:\OSDCloud'
+
 Install-Module OSDSUS -Force
 Import-Module OSDSUS -Force
 
@@ -182,9 +200,6 @@ if (-NOT ($Global:OSCulture)) {
     $Global:OSCulture = 'en-us'
 }
 
-if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
-    New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
-}
 
 $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match $Global:OSCulture} | Select-Object -First 1
 
