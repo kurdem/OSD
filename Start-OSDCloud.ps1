@@ -1,4 +1,5 @@
 #===================================================================================================
+#   VERSIONING
 #   Scripts/Test-OSDModule.ps1
 #   OSD Module Minimum Version
 #   Since the OSD Module is doing much of the heavy lifting, it is important to ensure that old
@@ -27,7 +28,7 @@ if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Se
     Break
 }
 #===================================================================================================
-#   Global Variables
+#   VARIABLES
 #   These are set automatically by the OSD Module 21.3.11+ when executing Start-OSDCloud
 #   $Global:GitHubBase = 'https://raw.githubusercontent.com'
 #   $Global:GitHubUser = $User
@@ -46,6 +47,7 @@ $Global:OSDCloudVariables = Get-Variable
 $BuildName      = 'OSDCloud'
 $RequiresWinPE  = $true
 #===================================================================================================
+#   HEADER
 #   Start-OSDCloud
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
@@ -54,7 +56,7 @@ Write-Host -ForegroundColor Green       "Start OSDCloud"
 Write-Host -Foregroundcolor Cyan        $Global:GitHubUrl
 Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT FOR TESTING ONLY"
 #===================================================================================================
-#   Menu
+#   MENU EXAMPLE
 #===================================================================================================
 if (-NOT ($Global:OSEdition)) {
     Write-Host -ForegroundColor DarkCyan "================================================================="
@@ -101,7 +103,7 @@ if (-NOT ($Global:OSEdition)) {
 Write-Host -ForegroundColor DarkCyan    "================================================================="
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Scripts/Save-AutoPilotConfiguration.ps1"
-
+Write-Host ""
 $AutoPilotConfiguration = Select-AutoPilotJson
 
 if ($AutoPilotConfiguration) {
