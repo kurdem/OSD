@@ -45,15 +45,15 @@ $RequiresWinPE  = $true
 #   Start-OSDCloud
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Start OSDCloud"
 Write-Host -Foregroundcolor Cyan        $Global:GitHubUrl
 Write-Warning "THIS IS CURRENTLY IN DEVELOPMENT FOR TESTING ONLY"
-Write-Host -ForegroundColor DarkCyan "================================================================="
 #===================================================================================================
 #   Menu
 #===================================================================================================
 if (-NOT ($Global:OSEdition)) {
+    Write-Host -ForegroundColor DarkCyan "================================================================="
     Write-Host "ENT " -ForegroundColor Green -BackgroundColor Black -NoNewline
     Write-Host "    Windows 10 x64 20H1 Enterprise"
     
@@ -121,15 +121,25 @@ if (Get-USBDisk) {
 }
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Enabling High Performance Power Plan"
 Write-Host -ForegroundColor Gray        "Get-OSDPower -Property High"
 Get-OSDPower -Property High
 #===================================================================================================
+#   Scripts/Update-BIOS.ps1
+#===================================================================================================
+if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
+    Write-Host -ForegroundColor DarkCyan    "================================================================="
+    Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
+    Write-Host -ForegroundColor Green       "Scripts/Update-BIOS.ps1"
+    Update-MyDellBIOS
+}
+#===================================================================================================
 #   Scripts/Initialize-OSDisk.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-Write-Host -ForegroundColor Green       "Prepare OSDisk"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
+Write-Host -ForegroundColor Green       "Scripts/Initialize-OSDisk.ps1"
 Clear-LocalDisk -Force -ShowWarning
 New-OSDisk -Force
 Start-Sleep -Seconds 3
@@ -138,19 +148,10 @@ if (-NOT (Get-PSDrive -Name 'C')) {
     Break
 }
 #===================================================================================================
-#   Scripts/Update-BIOS.ps1
-#===================================================================================================
-if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
-    Write-Host -ForegroundColor Green       "BIOS Update"
-    Update-MyDellBIOS
-}
-#===================================================================================================
 #   Scripts/Save-WindowsESD.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Scripts/Save-WindowsESD.ps1"
 Install-Module OSDSUS -Force
 Import-Module OSDSUS -Force
@@ -177,6 +178,7 @@ if (-NOT (Test-Path $OutFile)) {
     Write-Host "Downloading Windows 10 using cURL" -Foregroundcolor Cyan
     Write-Host "Source: $Source" -Foregroundcolor Cyan
     Write-Host "Destination: $OutFile" -Foregroundcolor Cyan
+    Write-Host "OSCulture: $Global:OSCulture" -Foregroundcolor Cyan
     #cmd /c curl.exe -o "$Destination" $Source
     & curl.exe --location --output "$OutFile" --url $Source
     #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
@@ -190,17 +192,17 @@ if (-NOT (Test-Path $OutFile)) {
 #   Scripts/Expand-WindowsESD.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Scripts/Expand-WindowsESD.ps1"
 
 if (-NOT ($Global:OSEdition)) {
     $Global:OSEdition = 'Enerprise'
 }
+Write-Host "OSEdition is set to $Global:OSEdition"
 
 if (-NOT (Test-Path 'C:\OSDCloud\Temp')) {
     New-Item 'C:\OSDCloud\Temp' -ItemType Directory -Force | Out-Null
 }
-
 if ($Global:OSEdition -eq 'Education') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 4 -ScratchDirectory 'C:\OSDCloud\Temp'}
 elseif ($Global:OSEdition -eq 'Pro') {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 8 -ScratchDirectory 'C:\OSDCloud\Temp'}
 else {Expand-WindowsImage -ApplyPath 'C:\' -ImagePath "$OutFile" -Index 6 -ScratchDirectory 'C:\OSDCloud\Temp'}
@@ -210,12 +212,13 @@ if (-NOT (Get-PSDrive -Name S)) {
     $SystemDrive | Set-Partition -NewDriveLetter 'S'
 }
 bcdboot C:\Windows /s S: /f ALL
+pause
 $SystemDrive | Remove-PartitionAccessPath -AccessPath "S:\"
 #===================================================================================================
 #   Scripts/Apply-Drivers.ps1
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Scripts/Apply-Drivers.ps1"
 if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
     Save-MyDellDriverCab
@@ -248,15 +251,17 @@ $UnattendDrivers | Out-File -FilePath $UnattendPath -Encoding utf8
 Write-Verbose -Verbose "Applying Use-WindowsUnattend $UnattendPath"
 Use-WindowsUnattend -Path 'C:\' -UnattendPath $UnattendPath
 #===================================================================================================
-#   Save-AutoPilotModules.ps1
+#   Scripts/Save-AutoPilotModules.ps1
 #===================================================================================================
-Write-Host -ForegroundColor White "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
+Write-Host -ForegroundColor Green       "Scripts/Save-AutoPilotModules.ps1"
 
-Save-Module -Name WindowsAutoPilotIntune -Path 'C:\Program Files\WindowsPowerShell\Modules' -Verbose
+Save-Module -Name WindowsAutoPilotIntune -Path 'C:\Program Files\WindowsPowerShell\Modules'
 if (-NOT (Test-Path 'C:\Program Files\WindowsPowerShell\Scripts')) {
     New-Item -Path 'C:\Program Files\WindowsPowerShell\Scripts' -ItemType Directory -Force | Out-Null
 }
-Save-Script -Name Get-WindowsAutoPilotInfo -Path 'C:\Program Files\WindowsPowerShell\Scripts' -Verbose
+Save-Script -Name Get-WindowsAutoPilotInfo -Path 'C:\Program Files\WindowsPowerShell\Scripts'
 
 $PathAutoPilot = 'C:\Windows\Provisioning\AutoPilot'
 if (-NOT (Test-Path $PathAutoPilot)) {
@@ -266,6 +271,6 @@ if (-NOT (Test-Path $PathAutoPilot)) {
 #   COMPLETE
 #===================================================================================================
 Write-Host -ForegroundColor DarkCyan    "================================================================="
-Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "OSDCloud is complete"
 Write-Host -ForegroundColor DarkCyan    "================================================================="
