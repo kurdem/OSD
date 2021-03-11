@@ -149,43 +149,40 @@ if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
     Update-MyDellBIOS
 }
 #===================================================================================================
-if (($BuildImage -eq 'ENT') -or ($BuildImage -eq 'EDU') -or ($BuildImage -eq 'PRO') -or ($BuildImage -eq '4')) {
-    Write-Host -ForegroundColor DarkCyan    "================================================================="
-    Write-Host -ForegroundColor Green       "Download Windows 10 ESD"
-    Write-Host -ForegroundColor Gray        "Install-Module OSDSUS -Force"
-    Write-Host -ForegroundColor Gray        "Import-Module OSDSUS -Force"
-    Write-Host -ForegroundColor Gray        "Get-OSDSUS -Catalog FeatureUpdate"
-    Write-Host -ForegroundColor Gray        "cURL Download"
-    Install-Module OSDSUS -Force
-    Import-Module OSDSUS -Force
+#   Scripts/Save-WindowsESD.ps1
+#===================================================================================================
+Write-Host -ForegroundColor DarkCyan    "================================================================="
+Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))"
+Write-Host -ForegroundColor Green       "Download Windows ESD"
+Install-Module OSDSUS -Force
+Import-Module OSDSUS -Force
 
-    if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
-        New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
-    }
+if (-NOT (Test-Path 'C:\OSDCloud\ESD')) {
+    New-Item 'C:\OSDCloud\ESD' -ItemType Directory -Force -ErrorAction Stop | Out-Null
+}
 
-    $WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
+$WindowsESD = Get-OSDSUS -Catalog FeatureUpdate -UpdateArch x64 -UpdateBuild 2009 -UpdateOS "Windows 10" | Where-Object {$_.Title -match 'business'} | Where-Object {$_.Title -match 'en-us'} | Select-Object -First 1
 
-    if (-NOT ($WindowsESD)) {
-        Write-Warning "Could not find a Windows 10 download"
-        Break
-    }
+if (-NOT ($WindowsESD)) {
+    Write-Warning "Could not find a Windows 10 download"
+    Break
+}
 
-    $Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
-    $OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
+$Source = ($WindowsESD | Select-Object -ExpandProperty OriginUri).AbsoluteUri
+$OutFile = Join-Path 'C:\OSDCloud\ESD' $WindowsESD.FileName
 
-    if (-NOT (Test-Path $OutFile)) {
-        Write-Host "Downloading Windows 10 using cURL" -Foregroundcolor Cyan
-        Write-Host "Source: $Source" -Foregroundcolor Cyan
-        Write-Host "Destination: $OutFile" -Foregroundcolor Cyan
-        #cmd /c curl.exe -o "$Destination" $Source
-        & curl.exe --location --output "$OutFile" --url $Source
-        #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
-    }
+if (-NOT (Test-Path $OutFile)) {
+    Write-Host "Downloading Windows 10 using cURL" -Foregroundcolor Cyan
+    Write-Host "Source: $Source" -Foregroundcolor Cyan
+    Write-Host "Destination: $OutFile" -Foregroundcolor Cyan
+    #cmd /c curl.exe -o "$Destination" $Source
+    & curl.exe --location --output "$OutFile" --url $Source
+    #& curl.exe --location --output "$OutFile" --progress-bar --url $Source
+}
 
-    if (-NOT (Test-Path $OutFile)) {
-        Write-Warning "Something went wrong in the download"
-        Break
-    }
+if (-NOT (Test-Path $OutFile)) {
+    Write-Warning "Something went wrong in the download"
+    Break
 }
 #===================================================================================================
 #   Expand Windows ESD
