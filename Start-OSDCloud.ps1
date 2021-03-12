@@ -15,9 +15,10 @@ if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Se
     Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
 
     if ($env:SystemDrive -eq 'X:') {
-        Write-Warning "Updating OSD PowerShell Module"
+        Write-Warning "Updating OSD PowerShell Module, you will need to restart OSDCloud"
         Install-Module OSD -Force
         Import-Module OSD -Force
+        Break
     } else {
         Write-Warning "Run the following PowerShell command to update the OSD PowerShell Module"
         Write-Warning "Install-Module OSD -Force -Verbose"
