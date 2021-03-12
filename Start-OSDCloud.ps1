@@ -261,7 +261,7 @@ Write-Host -ForegroundColor DarkCyan    "=======================================
 Write-Host -ForegroundColor White       "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) " -NoNewline
 Write-Host -ForegroundColor Green       "Scripts/Apply-Drivers.ps1"
 if ((Get-MyComputerManufacturer -Brief) -eq 'Dell') {
-    Save-MyDellDriverCab
+    #Save-MyDellDriverCab
 }
 
 $PathPanther = 'C:\Windows\Panther'
