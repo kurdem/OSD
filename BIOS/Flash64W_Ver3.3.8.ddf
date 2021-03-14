@@ -1,0 +1,16 @@
+﻿;*** MakeCAB Directive file;
+.OPTION EXPLICIT
+.Set CabinetNameTemplate=Flash64W_Ver3.3.8.cab
+.Set DiskDirectory1=D:\GitHub\OSDCloud\Dell\Flash64W
+.Set Cabinet=ON
+.Set Compress=ON
+.Set CompressionType=LZX
+.Set CabinetFileCountThreshold=0
+.Set FolderFileCountThreshold=0
+.Set FolderSizeThreshold=0
+.Set MaxCabinetSize=0
+.Set MaxDiskFileCount=0
+.Set MaxDiskSize=0
+"D:\GitHub\OSDCloud\Dell\Flash64W\Flash64W_Ver3.3.8\Flash64W.exe" "Flash64W.exe"
+"D:\GitHub\OSDCloud\Dell\Flash64W\Flash64W_Ver3.3.8\ReleaseNotes_FlashUpdate.txt" "ReleaseNotes_FlashUpdate.txt"
+
