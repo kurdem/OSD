@@ -9,7 +9,7 @@
 #   In WinPE, the latest version will be installed automatically
 #   In Windows, this script is stopped and you will need to update manually
 #===================================================================================================
-[Version]$OSDVersionMin = '21.3.15.1'
+[Version]$OSDVersionMin = '21.3.16.2'
 
 if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Select-Object -First 1).Version -lt $OSDVersionMin) {
     Write-Warning "OSDCloud requires OSD $OSDVersionMin or newer"
@@ -178,13 +178,10 @@ if ($OSDCloudOfflineOS) {
     Write-Host -ForegroundColor Cyan "Offline: $OSDCloudOfflineOSFullName"
 }
 elseif (Test-WebConnection -Uri $GetFeatureUpdate.FileUri) {
-    $SaveFeatureUpdate = Save-FeatureUpdate -OSBuild $OSBuild -OSCulture $OSCulture -DownloadPath 'C:\OSDCloud\OS' | Out-Null
-
-    if (Test-Path $SaveFeatureUpdate.FullName) {
+    $SaveFeatureUpdate = Save-FeatureUpdate -OSBuild $OSBuild -OSCulture $OSCulture -DownloadPath 'C:\OSDCloud\OS'
+    $Global:SaveFeatureUpdate = $SaveFeatureUpdate
+    if (Test-Path $($SaveFeatureUpdate.FullName)) {
         $OSDCloudOfflineOSFullName = $SaveFeatureUpdate.FullName
-    }
-    elseif (Test-Path "C:\OSDCloud\OS\$($GetFeatureUpdate.FileName)") {
-        $OSDCloudOfflineOSFullName = "C:\OSDCloud\OS\$($GetFeatureUpdate.FileName)"
     }
     else {
         Write-Warning "Something went wrong trying to get the Windows Feature Update"
