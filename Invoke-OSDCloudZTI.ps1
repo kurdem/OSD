@@ -1,4 +1,14 @@
-Write-Host  -ForegroundColor Cyan "Starting OSDCloud PreAction"
+Write-Host  -ForegroundColor Cyan "Starting OSDCloud Startup"
+Start-Sleep -Seconds 5
+
+if ((Get-MyComputerModel) -match 'Virtual') {
+    Write-Host  -ForegroundColor Cyan "Setting Display Resolution to 1600x"
+    Set-DisRes 1600
+}
+
+Write-Host  -ForegroundColor Cyan "Updating OSD PowerShell Module"
+Install-Module OSD -Force
+Import-Module OSD -Force
 Start-Sleep -Seconds 5
 
 Write-Host  -ForegroundColor Cyan "Ejecting ISO"
