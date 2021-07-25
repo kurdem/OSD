@@ -13,7 +13,7 @@ Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorActi
 #=======================================================================
 #   Profile OSDeploy
 #=======================================================================
-$Title = 'OSDeploy Autopilot Bridge'
+$Title = 'OSDeploy Autopilot Bridge 21.7.25.1'
 $DriverUpdate = $true
 $WindowsUpdate = $true
 $WindowsCapabilityRSAT = $true
