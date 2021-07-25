@@ -10,7 +10,6 @@ Write-Host -ForegroundColor DarkGray "==========================================
 Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Start-Transcript"
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-AutopilotBridge.log"
 Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
-Write-Host -ForegroundColor DarkGray "========================================================================="
 #=======================================================================
 #   Profile OSDeploy
 #=======================================================================
@@ -25,7 +24,7 @@ $ProductKey = 'NPPR9-FWDCX-D2C8J-H872K-2YT43'
 #=======================================================================
 if ($ProductKey) {
     Write-Host -ForegroundColor DarkGray "========================================================================="
-    Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Change Product Key"
+    Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Set-WindowsEdition Enterprise (ChangePK)"
     Invoke-Exe changepk.exe /ProductKey $ProductKey
     Get-WindowsEdition -Online
 }
@@ -74,7 +73,7 @@ if ($DriverUpdate) {
     }
 }
 if ($DriverUpdate) {
-    Get-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot -Install
+    Get-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot
 }
 #=======================================================================
 #	WindowsUpdate
