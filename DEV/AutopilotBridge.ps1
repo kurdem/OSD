@@ -13,7 +13,7 @@ Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorActi
 #=======================================================================
 #   Profile OSDeploy
 #=======================================================================
-$Title = 'OSDeploy Autopilot Bridge 21.7.25.1'
+$Title = 'OSDeploy Autopilot Bridge 21.7.25.2'
 $DriverUpdate = $true
 $WindowsUpdate = $true
 $WindowsCapabilityRSAT = $true
@@ -73,7 +73,7 @@ if ($DriverUpdate) {
     }
 }
 if ($DriverUpdate) {
-    Get-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot
+    Get-WindowsUpdate -UpdateType Driver -AcceptAll
 }
 #=======================================================================
 #	WindowsUpdate
@@ -94,7 +94,7 @@ if ($WindowsUpdate) {
 if ($WindowsUpdate) {
     #Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7
     Add-WUServiceManager -MicrosoftUpdate -Silent
-    Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot -Install
+    Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot
 }
 #=======================================================================
 #	Stop-Transcript
