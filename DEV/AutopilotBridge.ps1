@@ -2,7 +2,7 @@
 #   Header
 #=======================================================================
 Write-Host -ForegroundColor DarkGray "========================================================================="
-Write-Host -ForegroundColor Green "Start-AutopilotBridge"
+Write-Host -ForegroundColor Green "Start-AutopilotBridge 21.7.25.1"
 #=======================================================================
 #   Transcript
 #=======================================================================
