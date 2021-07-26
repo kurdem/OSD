@@ -61,7 +61,7 @@ if ($RemoveAppx) {
 #=======================================================================
 if ($DriverUpdate) {
     Write-Host -ForegroundColor DarkGray "========================================================================="
-    Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) PSWindowsUpdate Driver Update"
+    Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Windows Update Drivers"
     if (!(Get-Module PSWindowsUpdate -ListAvailable)) {
         try {
             Install-Module PSWindowsUpdate -Force
@@ -76,11 +76,11 @@ if ($DriverUpdate) {
     Install-WindowsUpdate -UpdateType Driver -AcceptAll -IgnoreReboot
 }
 #=======================================================================
-#	WindowsUpdate
+#	Windows Update Software
 #=======================================================================
 if ($WindowsUpdate) {
     Write-Host -ForegroundColor DarkGray "========================================================================="
-    Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) PSWindowsUpdate Windows Update"
+    Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Windows Update Software"
     if (!(Get-Module PSWindowsUpdate -ListAvailable)) {
         try {
             Install-Module PSWindowsUpdate -Force
@@ -93,12 +93,30 @@ if ($WindowsUpdate) {
 }
 if ($WindowsUpdate) {
     #Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7
-    Write-Host "Add-WUServiceManager -MicrosoftUpdate -Silent"
-    Write-Host "Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot"
-    #Download-WindowsUpdate -UpdateType Software -AcceptAll
-    Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot
+    Write-Host -ForegroundColor DarkCyan 'Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot'
+    Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot -NotTitle 'Malicious'
+}
+#=======================================================================
+#	Microsoft Update
+#=======================================================================
+if ($WindowsUpdate) {
+    Write-Host -ForegroundColor DarkGray "========================================================================="
+    Write-Host -ForegroundColor Cyan "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Microsoft Update"
+    if (!(Get-Module PSWindowsUpdate -ListAvailable)) {
+        try {
+            Install-Module PSWindowsUpdate -Force
+        }
+        catch {
+            Write-Warning 'Unable to install PSWindowsUpdate PowerShell Module'
+            $WindowsUpdate = $false
+        }
+    }
+}
+if ($WindowsUpdate) {
+    Write-Host -ForegroundColor DarkCyan 'Add-WUServiceManager -MicrosoftUpdate -Confirm:$false'
     Add-WUServiceManager -MicrosoftUpdate -Confirm:$false
-    Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
+    Write-Host -ForegroundColor DarkCyan 'Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot'
+    Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -NotTitle 'Malicious'
 }
 #=======================================================================
 #	Stop-Transcript
