@@ -2,7 +2,7 @@
 #   Header
 #=======================================================================
 Write-Host -ForegroundColor DarkGray "========================================================================="
-Write-Host -ForegroundColor Green "Start-AutopilotBridge 21.7.25.3"
+Write-Host -ForegroundColor Green "Start-AutopilotBridge 21.7.25.4"
 #=======================================================================
 #   Transcript
 #=======================================================================
@@ -13,7 +13,7 @@ Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorActi
 #=======================================================================
 #   Profile OSDeploy
 #=======================================================================
-$Title = 'OSDeploy Autopilot Bridge 21.7.25.3'
+$Title = 'OSDeploy Autopilot Bridge 21.7.25'
 $DriverUpdate = $true
 $WindowsUpdate = $true
 $WindowsCapabilityRSAT = $true
@@ -73,7 +73,7 @@ if ($DriverUpdate) {
     }
 }
 if ($DriverUpdate) {
-    Get-WindowsUpdate -UpdateType Driver -AcceptAll
+    Install-WindowsUpdate -UpdateType Driver -AcceptAll -IgnoreReboot
 }
 #=======================================================================
 #	WindowsUpdate
@@ -95,7 +95,10 @@ if ($WindowsUpdate) {
     #Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7
     Write-Host "Add-WUServiceManager -MicrosoftUpdate -Silent"
     Write-Host "Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot"
+    #Download-WindowsUpdate -UpdateType Software -AcceptAll
     Install-WindowsUpdate -UpdateType Software -AcceptAll -IgnoreReboot
+    Add-WUServiceManager -MicrosoftUpdate -Confirm:$false
+    Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
 }
 #=======================================================================
 #	Stop-Transcript
