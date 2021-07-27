@@ -1,12 +1,16 @@
 {
     "TaskScripts": [
         {
-            "Name": "OOBEDeploy Full",
+            "Name": "OSDCloud Windows 10 21H1 en-us with Autopilot",
             "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy.ps1"
         },
         {
-            "Name": "OOBEDeploy Updates Only",
-            "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy.ps1"
+            "Name": "OSDCloud Windows 10 21H1 en-us",
+            "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy1.ps1"
+        },
+        {
+            "Name": "OSDCloud Windows 10 21H1 en-us Audit Mode OOBEDeploy",
+            "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy1.ps1"
         }
     ]
 }
