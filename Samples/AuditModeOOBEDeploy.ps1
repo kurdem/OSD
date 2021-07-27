@@ -55,19 +55,7 @@ $AuditUnattendXml = @'
             <Description>OOBEDeploy</Description>
             <Path>PowerShell -Command "Start-OOBEDeploy -AddRSAT -AddNetFX3 -UpdateDrivers -UpdateWindows"</Path>
             </RunSynchronousCommand>
-
-            <RunSynchronousCommand wcm:action="add">
-            <Order>4</Order>
-            <Description>Restart Computer</Description>
-            <Path>shutdown /r /t 0</Path>
-            </RunSynchronousCommand>
-
-            <RunSynchronousCommand wcm:action="add">
-            <Order>5</Order>
-            <Description>Sysprep OOBE</Description>
-            <Path>%SystemRoot%\System32\Sysprep\Sysprep.exe /OOBE /Reboot</Path>
-            </RunSynchronousCommand>
-
+            
             </RunSynchronous>
         </component>
     </settings>
