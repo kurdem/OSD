@@ -1,0 +1,12 @@
+{
+    "TaskSequences": [
+        {
+            "Name": "OOBEDeploy Full",
+            "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy.ps1"
+        },
+        {
+            "Name": "OOBEDeploy Updates Only",
+            "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy.ps1"
+        }
+    ]
+}
