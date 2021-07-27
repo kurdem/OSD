@@ -1,4 +1,9 @@
-Write-Host  -ForegroundColor Cyan "Starting SeguraOSD's Custom OSDCloud ..."
+Write-Host  -ForegroundColor Cyan "This is a demonstration of WebPSScript"
+
+
+
+
+
 Write-Warning "This will automatically wipe your disk if you continue"
 Start-Sleep -Seconds 10
 
