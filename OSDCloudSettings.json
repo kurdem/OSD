@@ -1,0 +1,22 @@
+{
+    "Defaults":[],
+    "PostActions":[
+        {
+            "Quit": "",
+            "Restart": "Restart-Computer"
+        }
+    ],
+    "Tasks": [
+        {
+            "Name": "Windows 10 21H1 Pro en-us Retail",
+            "OSBuild": "21H1",
+            "OSEdition": "Pro",
+            "OSLanguage": "en-us",
+            "OSLicense": "Retail"
+        },
+        {
+            "Name": "OSDCloudGUI Audit Mode OOBEDeploy",
+            "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy1.ps1"
+        }
+    ]
+}
