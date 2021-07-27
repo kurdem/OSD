@@ -25,7 +25,7 @@ Start-OSDCloudGUI
 #=======================================================================
 #   Unattend.xml
 #=======================================================================
-$DemoUnattendXml = @'
+$AuditUnattendXml = @'
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <settings pass="oobeSystem">
@@ -46,13 +46,25 @@ $DemoUnattendXml = @'
 
             <RunSynchronousCommand wcm:action="add">
             <Order>2</Order>
-            <Description>Installing AutoPilot Scripts and Modules</Description>
-            <Path>PowerShell -Command "Start-OOBEDeploy -AddNetFX3 -UpdateDrivers -UpdateWindows"</Path>
+            <Description>Update OSD Module</Description>
+            <Path>PowerShell -Command "Install-Module OSD -Force"</Path>
+            </RunSynchronousCommand>
+
+            <RunSynchronousCommand wcm:action="add">
+            <Order>3</Order>
+            <Description>OOBEDeploy</Description>
+            <Path>PowerShell -Command "Start-OOBEDeploy -AddRSAT -AddNetFX3 -UpdateDrivers -UpdateWindows"</Path>
+            </RunSynchronousCommand>
+
+            <RunSynchronousCommand wcm:action="add">
+            <Order>4</Order>
+            <Description>Restart Computer</Description>
+            <Path>shutdown /r /t 0</Path>
             </RunSynchronousCommand>
 
             <RunSynchronousCommand wcm:action="add">
             <Order>5</Order>
-            <Description>Restart to OOBE</Description>
+            <Description>Sysprep OOBE</Description>
             <Path>%SystemRoot%\System32\Sysprep\Sysprep.exe /OOBE /Reboot</Path>
             </RunSynchronousCommand>
 
@@ -64,18 +76,18 @@ $DemoUnattendXml = @'
 #=======================================================================
 #   Audit Mode
 #=======================================================================
-$WindowsPantherPath = 'C:\Windows\Panther'
-if (-NOT (Test-Path $WindowsPantherPath)) {
-    New-Item -Path $WindowsPantherPath -ItemType Directory -Force | Out-Null
+$PantherUnattendPath = 'C:\Windows\Panther\Unattend'
+if (-NOT (Test-Path $PantherUnattendPath)) {
+    New-Item -Path $PantherUnattendPath -ItemType Directory -Force | Out-Null
 }
 
-$DemoUnattendXmlPath = Join-Path $WindowsPantherPath 'Unattend.xml'
+$AuditUnattendPath = Join-Path $PantherUnattendPath 'Unattend.xml'
 
-Write-Host -ForegroundColor Cyan "Set Unattend.xml at $DemoUnattendXmlPath"
-$DemoUnattendXml | Out-File -FilePath $DemoUnattendXmlPath -Encoding utf8
+Write-Host -ForegroundColor Cyan "Set Unattend.xml at $AuditUnattendPath"
+$AuditUnattendXml | Out-File -FilePath $AuditUnattendPath -Encoding utf8
 
 Write-Host -ForegroundColor Cyan 'Use-WindowsUnattend'
-Use-WindowsUnattend -Path 'C:\' -UnattendPath $DemoUnattendXmlPath -Verbose
+Use-WindowsUnattend -Path 'C:\' -UnattendPath $AuditUnattendPath -Verbose
 #=======================================================================
 #   Restart-Computer
 #=======================================================================
