@@ -11,14 +11,16 @@
     "Tasks": [
         {
             "Name": "Windows 10 21H1 Pro en-us Retail",
-            "Author": "",
-            "Description": "",
+            "Version": "21.7.28.1",
+            "Author": "SeguraOSD",
+            "Description": "Simple task to test the Tasks",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
             "Name": "OSDCloudGUI Audit Mode OOBEDeploy",
-            "Author": "",
-            "Description": "",
+            "Version": "21.7.27.1",
+            "Author": "SeguraOSD",
+            "Description": "Demo using Invoke-OSDCloud",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
         }
     ]
