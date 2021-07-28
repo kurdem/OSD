@@ -14,14 +14,14 @@
             "Name": "Start-OSDCloud with Params and Reboot",
             "Version": "21.7.28.1",
             "Author": "SeguraOSD",
-            "Description": "How to use Params with Start-OSDCloud",
+            "Description": "Windows 10 21H1 Pro en-us Retail",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
             "Name": "Start-OSDCloudGUI with Audit Mode OOBEDeploy",
             "Version": "21.7.28.1",
             "Author": "SeguraOSD",
-            "Description": "Demo using Start-OSDCloudGUI",
+            "Description": "Windows 10 21H1 Enterprise en-us Volume",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
         },
         {

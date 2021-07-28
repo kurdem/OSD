@@ -5,7 +5,11 @@ Start-Sleep -Seconds 5
 #=======================================================================
 $Params = @{
     OSBuild = "21H1"
+    OSEdition = "Pro"
     OSLanguage = "en-us"
+    OSLicense = "Retail"
+    SkipAutopilot = $true
+    SkipODT = $true
 }
 #=======================================================================
 #   Start-OSDCloudGUI
