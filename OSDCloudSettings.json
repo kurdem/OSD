@@ -9,14 +9,11 @@
     "Tasks": [
         {
             "Name": "Windows 10 21H1 Pro en-us Retail",
-            "OSBuild": "21H1",
-            "OSEdition": "Pro",
-            "OSLanguage": "en-us",
-            "OSLicense": "Retail"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/TaskScripts/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
             "Name": "OSDCloudGUI Audit Mode OOBEDeploy",
-            "Url": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy1.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/TaskScripts/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         }
     ]
 }
