@@ -21,11 +21,11 @@
             "Name": "Start-OSDCloudGUI with Audit Mode OOBEDeploy",
             "Version": "21.7.28.1",
             "Author": "SeguraOSD",
-            "Description": "Demo using Invoke-OSDCloud",
+            "Description": "Demo using Start-OSDCloudGUI",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
         },
         {
-            "Name": "Testing",
+            "Name": "Invoke-OSDCloud Example",
             "Version": "21.7.27.1",
             "Author": "SeguraOSD",
             "Description": "Demo using Invoke-OSDCloud",
