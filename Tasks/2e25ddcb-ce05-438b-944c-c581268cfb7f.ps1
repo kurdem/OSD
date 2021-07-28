@@ -1,4 +1,4 @@
-Write-Host  -ForegroundColor Cyan 'Start-OSDCloud with Params'
+Write-Host  -ForegroundColor Cyan 'Start-OSDCloud with Params and Reboot'
 Start-Sleep -Seconds 5
 #=======================================================================
 #   Params

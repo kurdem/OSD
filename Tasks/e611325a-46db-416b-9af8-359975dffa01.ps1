@@ -1,16 +1,9 @@
-Write-Host  -ForegroundColor Cyan 'Start-OSDCloud with Params and Reboot'
+Write-Host  -ForegroundColor Cyan 'Invoke-OSDCloud Example'
 Start-Sleep -Seconds 5
-#=======================================================================
-#   Params
-#=======================================================================
-$Params = @{
-    OSBuild = "21H1"
-    OSLanguage = "en-us"
-}
 #=======================================================================
 #   Start-OSDCloudGUI
 #=======================================================================
-Start-OSDCloud @Params
+Invoke-OSDCloud
 #=======================================================================
 #   Restart-Computer
 #=======================================================================
