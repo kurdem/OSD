@@ -1,9 +1,11 @@
 {
-    "Defaults":[],
-    "PostActions":[
+    "Settings":[
         {
-            "Quit": "",
-            "Restart": "Restart-Computer"
+            "Author": "",
+            "Company": "OSDeploy",
+            "Title": "OSDCloud Tasks",
+            "Path": "",
+            "Help": ""
         }
     ],
     "Tasks": [
