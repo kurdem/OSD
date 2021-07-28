@@ -1,27 +1,35 @@
 {
     "Settings":[
         {
+            "Title": "OSDCloud Tasks",
+            "Version": "21.7.28.1",
             "Author": "https://twitter.com/SeguraOSD",
             "Company": "OSDeploy.com",
-            "Title": "OSDCloud Tasks",
             "Path": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/OSDCloudTasks.json",
             "Help": "https://github.com/OSDeploy/OSDCloud/tree/main/Tasks"
         }
     ],
     "Tasks": [
         {
-            "Name": "Windows 10 21H1 Pro en-us Retail",
+            "Name": "Start-OSDCloud with Params and Reboot",
             "Version": "21.7.28.1",
             "Author": "SeguraOSD",
-            "Description": "Simple task to test the Tasks",
+            "Description": "How to use Params with Start-OSDCloud",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
-            "Name": "OSDCloudGUI Audit Mode OOBEDeploy",
-            "Version": "21.7.27.1",
+            "Name": "Start-OSDCloudGUI with Audit Mode OOBEDeploy",
+            "Version": "21.7.28.1",
             "Author": "SeguraOSD",
             "Description": "Demo using Invoke-OSDCloud",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
+        },
+        {
+            "Name": "Testing",
+            "Version": "21.7.27.1",
+            "Author": "SeguraOSD",
+            "Description": "Demo using Invoke-OSDCloud",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/e611325a-46db-416b-9af8-359975dffa01.ps1"
         }
     ]
 }
