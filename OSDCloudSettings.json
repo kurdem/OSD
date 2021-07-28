@@ -13,7 +13,7 @@
         },
         {
             "Name": "OSDCloudGUI Audit Mode OOBEDeploy",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
         }
     ]
 }
