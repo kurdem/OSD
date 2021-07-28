@@ -1,20 +1,24 @@
 {
     "Settings":[
         {
-            "Author": "",
-            "Company": "OSDeploy",
+            "Author": "https://twitter.com/SeguraOSD",
+            "Company": "OSDeploy.com",
             "Title": "OSDCloud Tasks",
-            "Path": "",
-            "Help": ""
+            "Path": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/OSDCloudTasks.json",
+            "Help": "https://github.com/OSDeploy/OSDCloud/tree/main/Tasks"
         }
     ],
     "Tasks": [
         {
             "Name": "Windows 10 21H1 Pro en-us Retail",
+            "Author": "",
+            "Description": "",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
             "Name": "OSDCloudGUI Audit Mode OOBEDeploy",
+            "Author": "",
+            "Description": "",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
         }
     ]
