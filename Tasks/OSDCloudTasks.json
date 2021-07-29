@@ -30,6 +30,13 @@
             "Author": "SeguraOSD",
             "Description": "Demo using Invoke-OSDCloud",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/e611325a-46db-416b-9af8-359975dffa01.ps1"
+        },
+        {
+            "Name": "Start-OSDCloud with an AutopilotCMD",
+            "Version": "21.7.27.1",
+            "Author": "SeguraOSD",
+            "Description": "Custom configuration for Akos Bakos",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/24d2a473-648e-45d3-ba95-dd6bbad1c51d.ps1"
         }
     ]
 }
