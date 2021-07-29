@@ -1,4 +1,4 @@
-Write-Host  -ForegroundColor Cyan 'Start-OSDCloud with Params and Reboot'
+Write-Host  -ForegroundColor Cyan 'Start-OSDCloud with Params AutopilotCMD Reboot AutopilotOOBE'
 Start-Sleep -Seconds 5
 
 #Start-OSDCloud
@@ -22,6 +22,40 @@ start PowerShell -NoL -W Mi
 start /wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force
 start /wait PowerShell -NoL -C Start-AutopilotOOBE
 '@
+$AutopilotCmd | Out-File -FilePath "C:\Windows\Autopilot.cmd" -Encoding ascii -Force
+
+#Create AutopilotOOBE Config
+$AutopilotOOBEJson = @'
+{
+    "AddToGroup":  "",
+    "AddToGroupOptions":  null,
+    "Assign":  {
+                   "IsPresent":  true
+               },
+    "AssignedUser":  "",
+    "AssignedUserExample":  "someone@example.com",
+    "AssignedComputerName":  "",
+    "AssignedComputerNameExample":  "Azure AD Join Only",
+    "Disabled":  null,
+    "Demo":  {
+                 "IsPresent":  false
+             },
+    "GroupTag":  "Akos",
+    "GroupTagOptions":  [
+                            "Akos",
+                            "Bakos"
+                        ],
+    "Hidden":  [
+                   "AddToGroup",
+                   "AssignedComputerName"
+               ],
+    "PostAction":  "Quit",
+    "Run":  "PowerShell",
+    "Docs":  "",
+    "Title":  "Akos Autopilot Register"
+}
+'@
+$AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 
 
 #Restart Computer
