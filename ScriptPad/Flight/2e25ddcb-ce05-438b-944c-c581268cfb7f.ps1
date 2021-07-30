@@ -7,5 +7,3 @@ $Params = @{
     SkipODT = $true
 }
 Start-OSDCloud @Params
-
-Restart-Computer
