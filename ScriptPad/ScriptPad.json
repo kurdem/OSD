@@ -1,42 +1,42 @@
 {
     "Settings":[
         {
-            "Title": "OSDCloud Builder",
-            "Version": "21.7.29.1",
+            "Title": "OSDCloud ScriptPad",
+            "Version": "21.7.30.1",
             "Author": "https://twitter.com/SeguraOSD",
             "Company": "OSDeploy.com",
-            "Path": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/OSDCloudTasks.json",
-            "Help": "https://github.com/OSDeploy/OSDCloud/tree/main/Tasks"
+            "Path": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/ScriptPad.json",
+            "Help": "https://github.com/OSDeploy/OSDCloud/tree/main/ScriptPad"
         }
     ],
-    "Tasks": [
+    "ScriptPad": [
         {
             "Name": "Start-OSDCloud with Params and Reboot",
             "Version": "21.7.28.1",
             "Author": "SeguraOSD",
             "Description": "Windows 10 21H1 Pro en-us Retail",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
             "Name": "Start-OSDCloudGUI with Audit Mode OOBEDeploy",
             "Version": "21.7.28.1",
             "Author": "SeguraOSD",
             "Description": "Windows 10 21H1 Enterprise en-us Volume",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/bb1466a2-5e23-462b-98b1-0c4758a61aef.ps1"
         },
         {
             "Name": "Invoke-OSDCloud Example",
             "Version": "21.7.27.1",
             "Author": "SeguraOSD",
             "Description": "Demo using Invoke-OSDCloud",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/e611325a-46db-416b-9af8-359975dffa01.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/e611325a-46db-416b-9af8-359975dffa01.ps1"
         },
         {
             "Name": "Start-OSDCloud with an AutopilotCMD",
             "Version": "21.7.27.1",
             "Author": "SeguraOSD",
             "Description": "Custom configuration for Akos Bakos",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Tasks/24d2a473-648e-45d3-ba95-dd6bbad1c51d.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/24d2a473-648e-45d3-ba95-dd6bbad1c51d.ps1"
         }
     ]
 }
