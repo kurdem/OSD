@@ -11,19 +11,11 @@
     ],
     "Scripts": [
         {
-            "Name": "New Script",
-            "Guid": "fa4a53ea-62ca-478e-95f6-2ff07f8f468a",
-            "Version": "21.7.30.1",
-            "Author": "SeguraOSD",
-            "Description": "Enjoy a blank script to play with",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/fa4a53ea-62ca-478e-95f6-2ff07f8f468a.ps1"
-        },
-        {
-            "Name": "Start-OSDCloud with Params and Reboot",
+            "Name": "Start-OSDCloud with Params and Restart",
             "Guid": "2e25ddcb-ce05-438b-944c-c581268cfb7f",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
-            "Description": "Windows 10 21H1 Pro en-us Retail",
+            "Description": "Windows 10 21H1 Pro en-us Retail and Restart-Computer",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
@@ -49,6 +41,12 @@
             "Author": "SeguraOSD",
             "Description": "Custom configuration for Akos Bakos",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/24d2a473-648e-45d3-ba95-dd6bbad1c51d.ps1"
+        },
+        {
+            "Name": "TEST: Unreachable Script",
+            "Guid": "fa4a53ea-62ca-478e-95f6-2ff07f8f468a",
+            "Description": "The URL does not exist",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/fa4a53ea-62ca-478e-95f6-2ff07f8f468a.ps1"
         }
     ]
 }
