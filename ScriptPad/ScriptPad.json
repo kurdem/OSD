@@ -71,12 +71,20 @@
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2a835f28-8fae-409c-8282-62adc8ac5240.ps1"
         },
         {
-            "Name": "Landing: Autopilot.cmd OOBEDeploy",
+            "Name": "Landing: OOBEDeploy CMD File",
             "Guid": "bc8383d8-4b0e-4407-be7d-fec1d2c20d6f",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
             "Description": "Create an Autopilot.cmd to launch OOBEDeploy",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/bc8383d8-4b0e-4407-be7d-fec1d2c20d6f.ps1"
+        },
+        {
+            "Name": "Landing: OOBEDeploy Configuration",
+            "Guid": "f74933ba-280c-4a13-8907-37dd1a91cade",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an OSDeploy.OOBEDeploy.json",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/f74933ba-280c-4a13-8907-37dd1a91cade.ps1"
         },
         {
             "Name": "Landing: Restart-Computer",
