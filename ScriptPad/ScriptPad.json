@@ -9,7 +9,7 @@
             "Help": "https://github.com/OSDeploy/OSDCloud/tree/main/ScriptPad"
         }
     ],
-    "ScriptPad": [
+    "Scripts": [
         {
             "Name": "New Script",
             "Guid": "fa4a53ea-62ca-478e-95f6-2ff07f8f468a",
