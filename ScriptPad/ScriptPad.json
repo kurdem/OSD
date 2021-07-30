@@ -43,9 +43,15 @@
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/24d2a473-648e-45d3-ba95-dd6bbad1c51d.ps1"
         },
         {
-            "Name": "TEST: Unreachable Script",
+            "Name": "PreFlight: Set-DisRes",
+            "Guid": "0256aeba-dfcf-4926-a0d1-2ecd4b0b324d",
+            "Description": "Set the Display Resolution of Virtual Machines to 1600px",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/0256aeba-dfcf-4926-a0d1-2ecd4b0b324d.ps1"
+        },
+        {
+            "Name": "PreFlight: Update-Module",
             "Guid": "fa4a53ea-62ca-478e-95f6-2ff07f8f468a",
-            "Description": "The URL does not exist",
+            "Description": "Update the OSD PowerShell Module",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/fa4a53ea-62ca-478e-95f6-2ff07f8f468a.ps1"
         }
     ]
