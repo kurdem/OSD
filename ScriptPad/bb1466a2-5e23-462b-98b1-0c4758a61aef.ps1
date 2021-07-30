@@ -1,6 +1,3 @@
-#This demo shows how to use OSDCloud rebooting to Audit Mode and running OOBEDeploy
-#You can modify your OSDCloud WinPE by running the following command
-#Edit-OSDCloud.winpe -WebPSScript 'https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/Samples/AuditModeOOBEDeploy.ps1'
 Write-Host  -ForegroundColor Cyan 'Demo OSDCloud Audit Mode OOBEDeploy'
 Start-Sleep -Seconds 10
 #=======================================================================
@@ -12,7 +9,7 @@ if ((Get-MyComputerModel) -match 'Virtual') {
     Set-DisRes 1600
 }
 #=======================================================================
-#   OSD Module
+#   Update the OSD Module
 #=======================================================================
 Write-Host  -ForegroundColor DarkCyan 'Install-Module OSD -Force'
 Install-Module OSD -Force
@@ -23,7 +20,7 @@ Import-Module OSD -Force
 #=======================================================================
 Start-OSDCloudGUI
 #=======================================================================
-#   Unattend.xml
+#   Apply Audit Mode Unattend.xml
 #=======================================================================
 $AuditUnattendXml = @'
 <?xml version="1.0" encoding="utf-8"?>
@@ -63,7 +60,7 @@ $AuditUnattendXml = @'
 </unattend>
 '@
 #=======================================================================
-#   Audit Mode
+#   Set Unattend.xml
 #=======================================================================
 $PantherUnattendPath = 'C:\Windows\Panther\Unattend'
 if (-NOT (Test-Path $PantherUnattendPath)) {

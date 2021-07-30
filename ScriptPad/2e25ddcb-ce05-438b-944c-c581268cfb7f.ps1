@@ -1,7 +1,3 @@
-Write-Host  -ForegroundColor Cyan 'Start-OSDCloud with Params and Reboot'
-Start-Sleep -Seconds 5
-
-#Start-OSDCloud
 $Params = @{
     OSBuild = "21H1"
     OSEdition = "Pro"
@@ -12,6 +8,4 @@ $Params = @{
 }
 Start-OSDCloud @Params
 
-#Restart Computer
-Start-Sleep -Seconds 10
 Restart-Computer
