@@ -11,15 +11,15 @@
     ],
     "Scripts": [
         {
-            "Name": "PreFlight: Set-DisRes",
+            "Name": "PreFlight: Update-Module",
             "Guid": "0095f14b-8738-4a59-a8a4-a797985deb4e",
-            "Description": "Set the Display Resolution of Virtual Machines to 1600px",
+            "Description": "Update the OSD PowerShell Module",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreFlight/0095f14b-8738-4a59-a8a4-a797985deb4e.ps1"
         },
         {
-            "Name": "PreFlight: Update-Module",
+            "Name": "PreFlight: Set-DisRes",
             "Guid": "00ffa4c0-51ac-4724-8954-5c46b049e370",
-            "Description": "Update the OSD PowerShell Module",
+            "Description": "Set the Display Resolution of Virtual Machines to 1600px",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreFlight/00ffa4c0-51ac-4724-8954-5c46b049e370.ps1"
         },
         {
@@ -85,6 +85,14 @@
             "Author": "SeguraOSD",
             "Description": "Simple way to Restart the Computer",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2ba2ed0e-9581-447b-b635-048d70cfd48a.ps1"
+        },
+        {
+            "Name": "Full Build: Demo for Donna",
+            "Guid": "3717be55-bd10-4940-81c0-712c57e45630",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "This should do just about everything",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/3717be55-bd10-4940-81c0-712c57e45630.ps1"
         }
     ]
 }
