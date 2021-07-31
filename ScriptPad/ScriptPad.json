@@ -47,15 +47,31 @@
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2a835f28-8fae-409c-8282-62adc8ac5240.ps1"
         },
         {
-            "Name": "Landing: AutopilotOOBE CMD File",
-            "Guid": "2b0f1854-833a-47d4-ae6a-3c35a1c1b159",
+            "Name": "Landing: AutopilotOOBE CMD",
+            "Guid": "dc51f56c-56b8-4a6d-8f61-fddf071ffe07",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
             "Description": "Create an Autopilot.cmd to launch AutopilotOOBE",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/dc51f56c-56b8-4a6d-8f61-fddf071ffe07.ps1"
+        },
+        {
+            "Name": "Landing: AutopilotOOBE CMD Command Line",
+            "Guid": "2b0f1854-833a-47d4-ae6a-3c35a1c1b159",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an Autopilot.cmd to launch AutopilotOOBE with a Command Line",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2b0f1854-833a-47d4-ae6a-3c35a1c1b159.ps1"
         },
         {
-            "Name": "Landing: AutopilotOOBE Configuration",
+            "Name": "Landing: AutopilotOOBE CMD CustomProfile",
+            "Guid": "2b1952fd-0e46-4ccb-8c52-c6adea1a4a48",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an Autopilot.cmd to launch AutopilotOOBE with a CustomProfile",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2b1952fd-0e46-4ccb-8c52-c6adea1a4a48.ps1"
+        },
+        {
+            "Name": "Landing: AutopilotOOBE Staging",
             "Guid": "2b23fda3-3fa3-4980-adeb-64d70080e066",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",

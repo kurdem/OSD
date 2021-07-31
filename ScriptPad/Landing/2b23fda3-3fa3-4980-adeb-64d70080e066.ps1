@@ -1,5 +1,5 @@
 #=======================================================================
-#   Landing: AutopilotOOBE Configuration
+#   Landing: AutopilotOOBE Staging
 #=======================================================================
 $AutopilotOOBEJson = @'
 {
@@ -14,11 +14,13 @@ $AutopilotOOBEJson = @'
     "Hidden":  [
                    "AddToGroup",
                    "AssignedComputerName",
-                   "AssignedUser"
+                   "AssignedUser",
+                   "PostAction"
                ],
     "PostAction":  "Quit",
-    "Run":  "PowerShell",
-    "Title":  "OSDCloud Autopilot Registration"
+    "Run":  "NetworkingWireless",
+    "Docs":  "https://autopilotoobe.osdeploy.com/",
+    "Title":  "OSDeploy Autopilot Registration"
 }
 '@
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
