@@ -1,5 +1,5 @@
 #=======================================================================
-#   Landing: Audit Mode OOBEDeploy
+#   PostOS: Audit Mode OOBEDeploy
 #=======================================================================
 $AuditUnattendXml = @'
 <?xml version="1.0" encoding="utf-8"?>

@@ -1,5 +1,5 @@
 #=======================================================================
-#   Landing: OOBEDeploy Configuration
+#   PostOS: OOBEDeploy Configuration
 #=======================================================================
 $OOBEDeployJson = @'
 {

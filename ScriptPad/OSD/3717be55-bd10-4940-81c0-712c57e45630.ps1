@@ -1,10 +1,10 @@
 #=======================================================================
-#   PreFlight: Update-Module
+#   PreOS: Update-Module
 #=======================================================================
 Install-Module OSD -Force
 Import-Module OSD -Force
 #=======================================================================
-#   Flight: Params and Start-OSDCloud
+#   OS: Params and Start-OSDCloud
 #=======================================================================
 $Params = @{
     OSBuild = "21H1"
@@ -16,7 +16,7 @@ $Params = @{
 }
 Start-OSDCloud @Params
 #=======================================================================
-#   Landing: AutopilotOOBE Configuration
+#   PostOS: AutopilotOOBE Configuration
 #=======================================================================
 $AutopilotOOBEJson = @'
 {
@@ -40,7 +40,7 @@ $AutopilotOOBEJson = @'
 '@
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 #=======================================================================
-#   Landing: OOBEDeploy Configuration
+#   PostOS: OOBEDeploy Configuration
 #=======================================================================
 $OOBEDeployJson = @'
 {
@@ -67,7 +67,7 @@ $OOBEDeployJson = @'
 '@
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 #=======================================================================
-#   Landing: OOBEDeploy CMD File
+#   PostOS: OOBEDeploy CMD File
 #=======================================================================
 $AutopilotCmd = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
@@ -78,6 +78,6 @@ start /wait PowerShell -NoL -C Start-OOBEDeploy
 '@
 $AutopilotCmd | Out-File -FilePath "C:\Windows\Autopilot.cmd" -Encoding ascii -Force
 #=======================================================================
-#   Landing: Restart-Computer
+#   PostOS: Restart-Computer
 #=======================================================================
 Restart-Computer
