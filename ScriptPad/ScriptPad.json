@@ -1,7 +1,7 @@
 {
     "Settings":[
         {
-            "Title": "OSDCloud ScriptPad",
+            "Title": "ScriptPad OSDCloud",
             "Version": "21.7.30.1",
             "Author": "https://twitter.com/SeguraOSD",
             "Company": "OSDeploy.com",
@@ -31,11 +31,11 @@
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Flight/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
         },
         {
-            "Name": "Flight: Invoke-OSDCloud with Params",
+            "Name": "Flight: Invoke-OSDCloud",
             "Guid": "24d2a473-648e-45d3-ba95-dd6bbad1c51d",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
-            "Description": "Windows 10 21H1 Pro en-us Retail",
+            "Description": "You have nothing to gain",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Flight/24d2a473-648e-45d3-ba95-dd6bbad1c51d.ps1"
         },
         {
