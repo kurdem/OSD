@@ -103,7 +103,7 @@
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2ba2ed0e-9581-447b-b635-048d70cfd48a.ps1"
         },
         {
-            "Name": "Full Build: Demo for Donna",
+            "Name": "Full Build: Demo",
             "Guid": "3717be55-bd10-4940-81c0-712c57e45630",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
