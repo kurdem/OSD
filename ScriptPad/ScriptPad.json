@@ -12,15 +12,15 @@
     "Scripts": [
         {
             "Name": "PreFlight: Set-DisRes",
-            "Guid": "0256aeba-dfcf-4926-a0d1-2ecd4b0b324d",
+            "Guid": "0ae02262-e035-4fed-8e95-934b2768a13c",
             "Description": "Set the Display Resolution of Virtual Machines to 1600px",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreFlight/0256aeba-dfcf-4926-a0d1-2ecd4b0b324d.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreFlight/0ae02262-e035-4fed-8e95-934b2768a13c.ps1"
         },
         {
             "Name": "PreFlight: Update-Module",
-            "Guid": "fa4a53ea-62ca-478e-95f6-2ff07f8f468a",
+            "Guid": "0a227c05-155c-4b96-bded-2ed70030c76a",
             "Description": "Update the OSD PowerShell Module",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreFlight/fa4a53ea-62ca-478e-95f6-2ff07f8f468a.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreFlight/0a227c05-155c-4b96-bded-2ed70030c76a.ps1"
         },
         {
             "Name": "Flight: Start-OSDCloud with Params and Restart",
@@ -48,51 +48,51 @@
         },
         {
             "Name": "Landing: Audit Mode OOBEDeploy",
-            "Guid": "e611325a-46db-416b-9af8-359975dffa01",
-            "Version": "21.7.30.1",
-            "Author": "SeguraOSD",
-            "Description": "Run OOBEDeploy in Audit Mode",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/e611325a-46db-416b-9af8-359975dffa01.ps1"
-        },
-        {
-            "Name": "Landing: AutopilotOOBE CMD File",
-            "Guid": "b52b2c98-9653-4964-ba0f-e0688e75cd41",
-            "Version": "21.7.30.1",
-            "Author": "SeguraOSD",
-            "Description": "Create an Autopilot.cmd to launch AutopilotOOBE",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/b52b2c98-9653-4964-ba0f-e0688e75cd41.ps1"
-        },
-        {
-            "Name": "Landing: AutopilotOOBE Configuration",
             "Guid": "2a835f28-8fae-409c-8282-62adc8ac5240",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
-            "Description": "Create an OSDeploy.AutopilotOOBE.json",
+            "Description": "Run OOBEDeploy in Audit Mode",
             "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2a835f28-8fae-409c-8282-62adc8ac5240.ps1"
         },
         {
+            "Name": "Landing: AutopilotOOBE CMD File",
+            "Guid": "2b0f1854-833a-47d4-ae6a-3c35a1c1b159",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an Autopilot.cmd to launch AutopilotOOBE",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2b0f1854-833a-47d4-ae6a-3c35a1c1b159.ps1"
+        },
+        {
+            "Name": "Landing: AutopilotOOBE Configuration",
+            "Guid": "2b23fda3-3fa3-4980-adeb-64d70080e066",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an OSDeploy.AutopilotOOBE.json",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2b23fda3-3fa3-4980-adeb-64d70080e066.ps1"
+        },
+        {
             "Name": "Landing: OOBEDeploy CMD File",
-            "Guid": "bc8383d8-4b0e-4407-be7d-fec1d2c20d6f",
+            "Guid": "2b825e56-b7d3-4e1b-b606-5540aab14b95",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
             "Description": "Create an Autopilot.cmd to launch OOBEDeploy",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/bc8383d8-4b0e-4407-be7d-fec1d2c20d6f.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2b825e56-b7d3-4e1b-b606-5540aab14b95.ps1"
         },
         {
             "Name": "Landing: OOBEDeploy Configuration",
-            "Guid": "f74933ba-280c-4a13-8907-37dd1a91cade",
+            "Guid": "2b346593-8cf0-44b3-864f-37ad126ffa9c",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
             "Description": "Create an OSDeploy.OOBEDeploy.json",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/f74933ba-280c-4a13-8907-37dd1a91cade.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2b346593-8cf0-44b3-864f-37ad126ffa9c.ps1"
         },
         {
             "Name": "Landing: Restart-Computer",
-            "Guid": "ad809e01-4c31-4452-851a-6670ec60c93d",
+            "Guid": "2ba2ed0e-9581-447b-b635-048d70cfd48a",
             "Version": "21.7.30.1",
             "Author": "SeguraOSD",
             "Description": "Simple way to Restart the Computer",
-            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/ad809e01-4c31-4452-851a-6670ec60c93d.ps1"
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/Landing/2ba2ed0e-9581-447b-b635-048d70cfd48a.ps1"
         }
     ]
 }

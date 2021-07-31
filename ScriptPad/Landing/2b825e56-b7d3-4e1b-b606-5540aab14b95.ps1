@@ -1,5 +1,5 @@
 #=======================================================================
-#   Landing: Autopilot.cmd OOBEDeploy
+#   Landing: OOBEDeploy CMD File
 #=======================================================================
 $AutopilotCmd = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
