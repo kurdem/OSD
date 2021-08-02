@@ -16,7 +16,7 @@ $Params = @{
 }
 Start-OSDCloud @Params
 #================================================
-#   PostOS: AutopilotOOBE Configuration
+#   [PostOS] AutopilotOOBE Configuration Staging
 #================================================
 $AutopilotOOBEJson = @'
 {
@@ -31,16 +31,18 @@ $AutopilotOOBEJson = @'
     "Hidden":  [
                    "AddToGroup",
                    "AssignedComputerName",
-                   "AssignedUser"
+                   "AssignedUser",
+                   "PostAction"
                ],
     "PostAction":  "Quit",
-    "Run":  "PowerShell",
-    "Title":  "OSDCloud Autopilot Registration"
+    "Run":  "NetworkingWireless",
+    "Docs":  "https://autopilotoobe.osdeploy.com/",
+    "Title":  "OSDeploy Autopilot Registration"
 }
 '@
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 #================================================
-#   PostOS: OOBEDeploy Configuration
+#   [PostOS] OOBEDeploy Configuration Staging
 #================================================
 $OOBEDeployJson = @'
 {
@@ -67,7 +69,7 @@ $OOBEDeployJson = @'
 '@
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 #================================================
-#   PostOS: OOBEDeploy CMD File
+#   [PostOS] OOBEDeploy CMD File
 #================================================
 $AutopilotCmd = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
@@ -75,9 +77,10 @@ set path=%path%;C:\Program Files\WindowsPowerShell\Scripts
 start PowerShell -NoL -W Mi
 start /wait PowerShell -NoL -C Install-Module OSD -Force
 start /wait PowerShell -NoL -C Start-OOBEDeploy
+exit
 '@
 $AutopilotCmd | Out-File -FilePath "C:\Windows\Autopilot.cmd" -Encoding ascii -Force
 #================================================
-#   PostOS: Restart-Computer
+#   [PostOS] Restart-Computer
 #================================================
 Restart-Computer
