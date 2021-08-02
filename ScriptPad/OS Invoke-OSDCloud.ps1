@@ -1,5 +1,4 @@
 #================================================
-#   PreOS: Update-Module
+#   OS Invoke-OSDCloud
 #================================================
-Install-Module OSD -Force
-Import-Module OSD -Force
+Invoke-OSDCloud

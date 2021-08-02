@@ -1,6 +1,6 @@
-#=======================================================================
+#================================================
 #   PostOS: Audit Mode OOBEDeploy
-#=======================================================================
+#================================================
 $AuditUnattendXml = @'
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -38,9 +38,9 @@ $AuditUnattendXml = @'
     </settings>
 </unattend>
 '@
-#=======================================================================
+#================================================
 #   Set Unattend.xml
-#=======================================================================
+#================================================
 $PantherUnattendPath = 'C:\Windows\Panther\Unattend'
 if (-NOT (Test-Path $PantherUnattendPath)) {
     New-Item -Path $PantherUnattendPath -ItemType Directory -Force | Out-Null

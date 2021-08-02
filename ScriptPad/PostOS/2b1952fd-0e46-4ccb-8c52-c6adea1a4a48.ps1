@@ -1,6 +1,6 @@
-#=======================================================================
+#================================================
 #   PostOS: AutopilotOOBE CMD CustomProfile
-#=======================================================================
+#================================================
 $AutopilotCmd = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 set path=%path%;C:\Program Files\WindowsPowerShell\Scripts

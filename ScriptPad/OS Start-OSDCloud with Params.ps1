@@ -1,5 +1,5 @@
 #================================================
-#   OS: Params and Start-OSDCloud
+#   OS Start-OSDCloud with Params
 #================================================
 $Params = @{
     OSBuild = "21H1"
