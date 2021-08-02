@@ -1,0 +1,114 @@
+{
+    "Settings":[
+        {
+            "Title": "OSDCloud ScriptPad",
+            "Version": "21.7.30.1",
+            "Author": "https://twitter.com/SeguraOSD",
+            "Company": "OSDeploy.com",
+            "Path": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/ScriptPad.json",
+            "Help": "https://github.com/OSDeploy/OSDCloud/tree/main/ScriptPad"
+        }
+    ],
+    "Scripts": [
+        {
+            "Name": "PreOS: Update-Module",
+            "Guid": "0095f14b-8738-4a59-a8a4-a797985deb4e",
+            "Description": "Update the OSD PowerShell Module",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreOS/0095f14b-8738-4a59-a8a4-a797985deb4e.ps1"
+        },
+        {
+            "Name": "PreOS: Set-DisRes",
+            "Guid": "00ffa4c0-51ac-4724-8954-5c46b049e370",
+            "Description": "Set the Display Resolution of Virtual Machines to 1600px",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PreOS/00ffa4c0-51ac-4724-8954-5c46b049e370.ps1"
+        },
+        {
+            "Name": "OS: Start-OSDCloud with Params",
+            "Guid": "2e25ddcb-ce05-438b-944c-c581268cfb7f",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Windows 10 21H1 Pro en-us Retail",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/OS/2e25ddcb-ce05-438b-944c-c581268cfb7f.ps1"
+        },
+        {
+            "Name": "OS: Invoke-OSDCloud",
+            "Guid": "24d2a473-648e-45d3-ba95-dd6bbad1c51d",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "You have nothing to gain",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/OS/24d2a473-648e-45d3-ba95-dd6bbad1c51d.ps1"
+        },
+        {
+            "Name": "PostOS: Audit Mode OOBEDeploy",
+            "Guid": "2a835f28-8fae-409c-8282-62adc8ac5240",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Run OOBEDeploy in Audit Mode",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/2a835f28-8fae-409c-8282-62adc8ac5240.ps1"
+        },
+        {
+            "Name": "PostOS: AutopilotOOBE CMD",
+            "Guid": "dc51f56c-56b8-4a6d-8f61-fddf071ffe07",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an Autopilot.cmd to launch AutopilotOOBE",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/dc51f56c-56b8-4a6d-8f61-fddf071ffe07.ps1"
+        },
+        {
+            "Name": "PostOS: AutopilotOOBE CMD Command Line",
+            "Guid": "2b0f1854-833a-47d4-ae6a-3c35a1c1b159",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an Autopilot.cmd to launch AutopilotOOBE with a Command Line",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/2b0f1854-833a-47d4-ae6a-3c35a1c1b159.ps1"
+        },
+        {
+            "Name": "PostOS: AutopilotOOBE CMD CustomProfile",
+            "Guid": "2b1952fd-0e46-4ccb-8c52-c6adea1a4a48",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an Autopilot.cmd to launch AutopilotOOBE with a CustomProfile",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/2b1952fd-0e46-4ccb-8c52-c6adea1a4a48.ps1"
+        },
+        {
+            "Name": "PostOS: AutopilotOOBE Staging",
+            "Guid": "2b23fda3-3fa3-4980-adeb-64d70080e066",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an OSDeploy.AutopilotOOBE.json",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/2b23fda3-3fa3-4980-adeb-64d70080e066.ps1"
+        },
+        {
+            "Name": "PostOS: OOBEDeploy CMD File",
+            "Guid": "2b825e56-b7d3-4e1b-b606-5540aab14b95",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an Autopilot.cmd to launch OOBEDeploy",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/2b825e56-b7d3-4e1b-b606-5540aab14b95.ps1"
+        },
+        {
+            "Name": "PostOS: OOBEDeploy Configuration",
+            "Guid": "2b346593-8cf0-44b3-864f-37ad126ffa9c",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Create an OSDeploy.OOBEDeploy.json",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/2b346593-8cf0-44b3-864f-37ad126ffa9c.ps1"
+        },
+        {
+            "Name": "PostOS: Restart-Computer",
+            "Guid": "2ba2ed0e-9581-447b-b635-048d70cfd48a",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "Simple way to Restart the Computer",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/PostOS/2ba2ed0e-9581-447b-b635-048d70cfd48a.ps1"
+        },
+        {
+            "Name": "Full Build: Demo",
+            "Guid": "3717be55-bd10-4940-81c0-712c57e45630",
+            "Version": "21.7.30.1",
+            "Author": "SeguraOSD",
+            "Description": "This should do just about everything",
+            "Uri": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/main/ScriptPad/OSD/3717be55-bd10-4940-81c0-712c57e45630.ps1"
+        }
+    ]
+}
