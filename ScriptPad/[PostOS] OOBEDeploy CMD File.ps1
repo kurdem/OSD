@@ -1,5 +1,5 @@
 #================================================
-#   PostOS: OOBEDeploy CMD File
+#   [PostOS] OOBEDeploy CMD File
 #================================================
 $AutopilotCmd = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force

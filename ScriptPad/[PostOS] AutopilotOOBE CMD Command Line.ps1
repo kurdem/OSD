@@ -1,5 +1,5 @@
 #================================================
-#   PostOS: AutopilotOOBE CMD Command Line
+#   [PostOS] AutopilotOOBE CMD Command Line
 #================================================
 $AutopilotCmd = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force

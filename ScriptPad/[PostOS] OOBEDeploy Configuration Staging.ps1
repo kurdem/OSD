@@ -1,5 +1,5 @@
 #================================================
-#   PostOS: OOBEDeploy Configuration
+#   [PostOS] OOBEDeploy Configuration Staging
 #================================================
 $OOBEDeployJson = @'
 {
