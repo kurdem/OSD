@@ -1,5 +1,11 @@
 #================================================
-#   [PreOS] Install and Import OSD Module
+#   OSDCloud Task Sequence
+#   Windows 10 21H1 Pro en-us Retail
+#   No Autopilot
+#   No Office Deployment Tool
+#================================================
+#   PreOS
+#   Install and Import OSD Module
 #================================================
 Install-Module OSD -Force
 Import-Module OSD -Force
@@ -16,7 +22,8 @@ $Params = @{
 }
 Start-OSDCloud @Params
 #================================================
-#   [PostOS] AutopilotOOBE Configuration Staging
+#   PostOS
+#   AutopilotOOBE Configuration Staging
 #================================================
 $AutopilotOOBEJson = @'
 {
@@ -45,7 +52,8 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 }
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 #================================================
-#   [PostOS] OOBEDeploy Configuration Staging
+#   PostOS
+#   OOBEDeploy Configuration Staging
 #================================================
 $OOBEDeployJson = @'
 {
@@ -75,7 +83,8 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 }
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 #================================================
-#   [PostOS] OOBEDeploy CMD File
+#   PostOS
+#   OOBEDeploy CMD File
 #================================================
 $AutopilotCmd = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
@@ -87,6 +96,7 @@ exit
 '@
 $AutopilotCmd | Out-File -FilePath "C:\Windows\Autopilot.cmd" -Encoding ascii -Force
 #================================================
-#   [PostOS] Restart-Computer
+#   PostOS
+#   Restart-Computer
 #================================================
 Restart-Computer

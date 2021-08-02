@@ -1,5 +1,6 @@
 #================================================
-#   [PostOS] AutopilotOOBE Configuration Staging
+#   PostOS
+#   AutopilotOOBE Configuration Staging
 #================================================
 $AutopilotOOBEJson = @'
 {
