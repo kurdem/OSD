@@ -2,7 +2,7 @@
 #   PostOS
 #   OOBEDeploy CMD File
 #================================================
-$AutopilotCmd = @'
+$OOBEDeployCMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 set path=%path%;C:\Program Files\WindowsPowerShell\Scripts
 start PowerShell -NoL -W Mi
@@ -10,4 +10,4 @@ start /wait PowerShell -NoL -C Install-Module OSD -Force
 start /wait PowerShell -NoL -C Start-OOBEDeploy
 exit
 '@
-$AutopilotCmd | Out-File -FilePath "C:\Windows\Autopilot.cmd" -Encoding ascii -Force
+$OOBEDeployCMD | Out-File -FilePath "C:\Windows\OOBEDeploy.cmd" -Encoding ascii -Force
