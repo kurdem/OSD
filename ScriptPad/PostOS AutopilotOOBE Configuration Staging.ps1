@@ -1,5 +1,5 @@
 #================================================
-#   PostOS
+#   WinPE PostOS Sample
 #   AutopilotOOBE Configuration Staging
 #================================================
 $AutopilotOOBEJson = @'
