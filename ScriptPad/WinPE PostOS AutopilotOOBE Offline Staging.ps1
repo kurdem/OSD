@@ -12,6 +12,5 @@ $Params = @{
     Hidden = 'AddToGroup','AssignedComputerName','AssignedUser','PostAction'
     Assign = $true
     Run = 'NetworkingWireless'
-    Docs = 'https://autopilotoobe.osdeploy.com/'
 }
 AutopilotOOBE @Params

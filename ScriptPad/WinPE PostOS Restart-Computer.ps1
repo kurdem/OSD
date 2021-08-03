@@ -1,6 +1,5 @@
 #================================================
-#   PostOS
-#   Install and Import OSD Module
+#   WinPE PostOS
+#   Restart-Computer
 #================================================
-Install-Module OSD -Force
-Import-Module OSD -Force
+Restart-Computer

@@ -1,5 +1,6 @@
 #================================================
 #   PostOS
-#   Restart-Computer
+#   Update PowerShell Modules
 #================================================
-Restart-Computer
+Install-Module OSD -Force
+Import-Module OSD -Force
