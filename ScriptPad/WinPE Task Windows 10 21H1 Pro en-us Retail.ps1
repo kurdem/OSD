@@ -43,7 +43,7 @@ AutopilotOOBE @Params
 #   OOBEDeploy Offline Staging
 #================================================
 $Params = @{
-    AutopilotOOBE = $true
+    Autopilot = $true
     RemoveAppx = "CommunicationsApps","OfficeHub","People","Skype","Solitaire","Xbox","ZuneMusic","ZuneVideo"
     UpdateDrivers = $true
     UpdateWindows = $true
