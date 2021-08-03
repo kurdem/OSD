@@ -1,6 +1,6 @@
 #================================================
 #   WinPE PostOS Sample
-#   OOBEDeploy Offline Staging
+#   Set OOBEDeploy
 #================================================
 $Params = @{
     Autopilot = $true

@@ -1,6 +1,6 @@
 #================================================
-#   PostOS
-#   OOBEDeploy Configuration Staging
+#   WinPE PostOS
+#   Set OOBEDeploy JSON
 #================================================
 $OOBEDeployJson = @'
 {
