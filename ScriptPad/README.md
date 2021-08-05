@@ -1,5 +1,5 @@
-#OSDCloud
-Scripts in this Repository are used for testing OSDCloud
+Scripts in this Repository are used for testing Git2PS with OSDCloud
 
-You will see this in the Textbox as MarkDown files (md)
-have been added
+Git2PS now supports MarkDown files (as text)
+You will also notice that when a MD file is displayed, the
+Start-Process button is removed
