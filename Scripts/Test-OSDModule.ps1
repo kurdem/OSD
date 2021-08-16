@@ -22,3 +22,4 @@ if ((Get-Module -Name OSD -ListAvailable | `Sort-Object Version -Descending | Se
         Break
     }
 }
+#Test
